@@ -1,8 +1,9 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://src/MenuInterfaces/213148__complex-waveform__click.wav" type="AudioStream" id=1]
 [ext_resource path="res://src/MenuInterfaces/red.png" type="Texture" id=2]
 [ext_resource path="res://src/MenuInterfaces/442161__isteak__enter-button-low-robotic.wav" type="AudioStream" id=3]
+[ext_resource path="res://src/MenuInterfaces/TactileMap/VerticalGridline.gd" type="Script" id=4]
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 0.2, 720 )
@@ -12,6 +13,7 @@ gravity_vec = Vector2( 0, 0 )
 gravity = 0.0
 linear_damp = 0.0
 angular_damp = 0.0
+script = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )

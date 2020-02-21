@@ -109,7 +109,6 @@ func _process(delta):
 	if sweepline_x.position.y > y_min:
 		initial_horizontal_border_down_collision = false
 	
-	
 	crosshair.position.x = sweepline_y.position.x
 	crosshair.position.y = sweepline_x.position.y
 
@@ -137,10 +136,6 @@ func on_HorizontalGridline_entered(area_id, source):
 			Input.start_joy_vibration (0, .4, 0, .1)
 		source.get_node("Audio_Midline").play()
 	
-func on_HorizontalBorder_entered(area_id, source):
-	if area_id == sweepline_x:
-		issue_horizontal_border_feedback()
-
 func on_VerticalGridline_entered(area_id, source):
 	if area_id == sweepline_y:
 		debug+=1 #DEBUG: this is to assist with detecting bug where collisions randomly not detected
@@ -148,10 +143,6 @@ func on_VerticalGridline_entered(area_id, source):
 		if ui_feedback_vibrate_gridlines == true:
 			Input.start_joy_vibration (0, .4, 0, .1)
 		source.get_node("Audio_Midline").play()
-	
-func on_VerticalBorder_entered(area_id, source):
-	if area_id == sweepline_y: 
-		issue_vertical_border_feedback()
 
 # TODO: add functionality, pass waypoint data through signal so corresponding object can be created/ updated
 func place_waypoint():
@@ -166,7 +157,7 @@ func spawn_horizontal_gridlines():
 	for gridline in (number_of_gridlines.y-1):
 		var next_horizontal_gridline = HorizontalGridline.instance()
 		next_horizontal_gridline.position.y = (gridline+1)*gridline_y_delta
-		next_horizontal_gridline.connect("area_entered",self,"on_HorizontalGridline_entered")
+		next_horizontal_gridline.connect("area_entered_modified",self,"on_HorizontalGridline_entered")
 		add_child(next_horizontal_gridline)
 	
 func spawn_vertical_gridlines():
@@ -174,7 +165,7 @@ func spawn_vertical_gridlines():
 	for gridline in (number_of_gridlines.x-1):
 		var next_vertical_gridline = VerticalGridline.instance()
 		next_vertical_gridline.position.x = (gridline+1)*gridline_x_delta
-		next_vertical_gridline.connect("area_entered",self,"on_VerticalGridline_entered")
+		next_vertical_gridline.connect("area_entered_modified",self,"on_VerticalGridline_entered")
 		add_child(next_vertical_gridline)
 		
 func _on_ResourceMarker_area_entered(area_id):
