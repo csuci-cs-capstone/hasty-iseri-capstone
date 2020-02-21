@@ -27,6 +27,11 @@ var ui_feedback_vibrate_borders = true
 var ui_feedback_vibrate_gridlines = false
 const SWEEP_CONST = 8
 
+var initial_horizontal_border_up_collision = false
+var initial_horizontal_border_down_collision = false
+var initial_vertical_border_left_collision = false
+var initial_vertical_border_right_collision = false
+
 var player_marker = false
 var markers = {"player": player_marker,"resource":[],"waypoint":[]}
 
@@ -73,21 +78,44 @@ func _process(delta):
 	elif Input.is_action_pressed("menu_ui_down") and sweepline_x.position.y < y_max:
 		sweepline_x.position.y += sweep_velocity.y*delta
 		
-	elif Input.is_action_pressed("menu_ui_right") and sweepline_y.position.x >= x_max:
+	elif Input.is_action_just_pressed("menu_ui_right") and sweepline_y.position.x >= x_max:
 		issue_vertical_border_feedback()
-	elif Input.is_action_pressed("menu_ui_left") and sweepline_y.position.x <= x_min:
+	elif Input.is_action_just_pressed("menu_ui_left") and sweepline_y.position.x <= x_min:
 		issue_vertical_border_feedback()
-	elif Input.is_action_pressed("menu_ui_up") and sweepline_x.position.y <= y_min:
+	elif Input.is_action_just_pressed("menu_ui_up") and sweepline_x.position.y <= y_min:
 		issue_horizontal_border_feedback()
-	elif Input.is_action_pressed("menu_ui_down") and sweepline_x.position.y >= y_max:
+	elif Input.is_action_just_pressed("menu_ui_down") and sweepline_x.position.y >= y_max:
 		issue_horizontal_border_feedback()
+		
+	if sweepline_y.position.x >= x_max and not initial_vertical_border_right_collision:
+		initial_vertical_border_right_collision = true
+		issue_vertical_border_feedback()
+	elif sweepline_y.position.x <= x_min and not initial_vertical_border_left_collision:
+		initial_vertical_border_left_collision = true
+		issue_vertical_border_feedback()
+	elif sweepline_x.position.y >= y_max and not initial_horizontal_border_up_collision:
+		initial_horizontal_border_up_collision = true
+		issue_horizontal_border_feedback()
+	elif sweepline_x.position.y <= y_min and not initial_horizontal_border_down_collision:
+		initial_horizontal_border_down_collision = true
+		issue_horizontal_border_feedback()
+		
+	if sweepline_y.position.x < x_max:
+		initial_vertical_border_right_collision = false
+	if sweepline_y.position.x > x_min:
+		initial_vertical_border_left_collision = false
+	if sweepline_x.position.y < y_max:
+		initial_horizontal_border_up_collision = false
+	if sweepline_x.position.y > y_min:
+		initial_horizontal_border_down_collision = false
+	
 	
 	crosshair.position.x = sweepline_y.position.x
 	crosshair.position.y = sweepline_x.position.y
 
 func _physics_process(delta):
 	var sweepline_x_collision_sources
-	sweepline_x.get_overlapping_areas()
+	sweepline_x_collision_sources = sweepline_x.get_overlapping_areas()
 
 func issue_horizontal_border_feedback():
 	var audio_feedback = sweepline_x.get_node("Audio_Border")
