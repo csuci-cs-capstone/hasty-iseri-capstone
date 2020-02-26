@@ -1,0 +1,25 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/442161__isteak__enter-button-low-robotic.wav-a3fa1345c09bdf974e978abb637afebc.sample"
+
+[deps]
+
+source_file="res://src/MenuInterfaces/442161__isteak__enter-button-low-robotic.wav"
+dest_files=[ "res://.import/442161__isteak__enter-button-low-robotic.wav-a3fa1345c09bdf974e978abb637afebc.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+<<<<<<< Updated upstream
+edit/trim=false
+=======
+edit/trim=true
+>>>>>>> Stashed changes
+edit/normalize=false
+edit/loop=false
+compress/mode=0
