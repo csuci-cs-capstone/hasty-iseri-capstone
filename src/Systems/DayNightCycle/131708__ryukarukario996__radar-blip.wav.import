@@ -2,13 +2,11 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/131708__ryukarukario996__radar-blip.wav-438235cc40773ae77e4021c46a59dca6.sample"
+valid=false
 
 [deps]
 
 source_file="res://src/Systems/DayNightCycle/131708__ryukarukario996__radar-blip.wav"
-dest_files=[ "res://.import/131708__ryukarukario996__radar-blip.wav-438235cc40773ae77e4021c46a59dca6.sample" ]
-
 [params]
 
 force/8_bit=false
