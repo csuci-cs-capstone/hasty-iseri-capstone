@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://src/MenuInterfaces/InventoryMenu/InventoryItem.gd" type="Script" id=1]
-[ext_resource path="res://src/MenuInterfaces/442161__isteak__enter-button-low-robotic.wav" type="AudioStream" id=2]
+[ext_resource path="res://src/MenuInterfaces/InventoryMenu/speech_default_name.wav" type="AudioStream" id=2]
 
 [node name="InventoryItem" type="Node"]
 script = ExtResource( 1 )
@@ -33,3 +33,11 @@ margin_bottom = 14.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="WhisperDelayLeft" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+
+[node name="WhisperDelayRight" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
