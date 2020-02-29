@@ -22,17 +22,18 @@ func consume():
 		$ConsumeSound.play()
 
 func deselect():
-	if $IdentitySound.is_playing():
-		$IdentitySound.stop()
-	if $NameToSpeech.is_playing():
-		$NameToSpeech.stop()
-
+	stop_all_audio()
+	
 func load_type_audio():
 	if type:
 		pass
 
 func issue_audio_id():
 	$IdentitySound.play()
+
+func read_description():
+	if not $DescriptionToSpeech.is_playing():
+		$DescriptionToSpeech.play()
 	
 func select():
 	$NameToSpeech.set_bus('Master')
@@ -43,7 +44,10 @@ func select():
 
 func set_audio_id(audio_id):
 	$IdentitySound.set_stream(audio_id)
-	
+
+func set_description_to_speech(description_to_speech):
+	$DescriptionToSpeech.set_stream(description_to_speech)
+
 func set_name_to_speech(name_to_speech):
 	$NameToSpeech.set_stream(name_to_speech)
 	
@@ -61,13 +65,15 @@ func speak_name():
 		$NameToSpeech.play()
 
 func stop_all_audio():
-	if $NameToSpeech.is_playing():
-		$NameToSpeech.stop()
 	if $ConsumeSound.is_playing():
 		$ConsumeSound.stop()
+	if $DescriptionToSpeech.is_playing():
+		$DescriptionToSpeech.stop()
 	if $IdentitySound.is_playing():
 		$IdentitySound.stop()
-	
+	if $NameToSpeech.is_playing():
+		$NameToSpeech.stop()
+
 func whisper_name_left():
 	print($NameToSpeech.get_bus())
 	$NameToSpeech.set_bus("L_UI_Whisper")
