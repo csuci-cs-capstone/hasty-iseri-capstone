@@ -5,7 +5,7 @@ var type
 var has_examine = false
 var has_consume = false
 var has_craft = false
-
+var craft_compatibility_list = []
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# TODO: implement audio resource loading; load all inventory item sounds here?
@@ -17,6 +17,12 @@ func _ready():
 #func _process(delta):
 #	pass
 
+func add_craft_compatible_item(items):
+	if typeof(items) == TYPE_STRING:
+		items = [items]
+	for item in items:
+		craft_compatibility_list.append(item)
+		
 func consume():
 	if not $ConsumeSound.is_playing():
 		$ConsumeSound.play()
