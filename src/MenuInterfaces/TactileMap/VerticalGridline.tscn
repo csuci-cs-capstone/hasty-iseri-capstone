@@ -1,0 +1,40 @@
+<<<<<<< Updated upstream
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://src/MenuInterfaces/213148__complex-waveform__click.wav" type="AudioStream" id=1]
+[ext_resource path="res://src/MenuInterfaces/red.png" type="Texture" id=2]
+[ext_resource path="res://src/MenuInterfaces/442161__isteak__enter-button-low-robotic.wav" type="AudioStream" id=3]
+=======
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://src/MenuInterfaces/213148__complex-waveform__click.wav" type="AudioStream" id=1]
+[ext_resource path="res://src/MenuInterfaces/red.png" type="Texture" id=2]
+>>>>>>> Stashed changes
+[ext_resource path="res://src/MenuInterfaces/TactileMap/VerticalGridline.gd" type="Script" id=4]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 0.2, 720 )
+
+[node name="VerticalGridline" type="Area2D"]
+gravity_vec = Vector2( 0, 0 )
+gravity = 0.0
+linear_damp = 0.0
+angular_damp = 0.0
+script = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="developer_visual" type="Sprite" parent="CollisionShape2D"]
+scale = Vector2( 0.105224, 7.02092 )
+texture = ExtResource( 2 )
+
+<<<<<<< Updated upstream
+[node name="Audio_Border" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 3 )
+
+[node name="Audio_Midline" type="AudioStreamPlayer2D" parent="."]
+=======
+[node name="AudioMidline" type="AudioStreamPlayer2D" parent="."]
+>>>>>>> Stashed changes
+stream = ExtResource( 1 )

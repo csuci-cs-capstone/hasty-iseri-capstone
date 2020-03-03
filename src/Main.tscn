@@ -49,6 +49,8 @@ script = ExtResource( 2 )
 
 [node name="PlayerAvatar" type="Node" parent="GameWorld"]
 
+[node name="InventoryItems" type="Node" parent="GameWorld"]
+
 [node name="Hostiles" type="Node" parent="GameWorld"]
 
 [node name="DayNightCycle" type="Node" parent="GameWorld"]
@@ -61,7 +63,7 @@ script = ExtResource( 2 )
 
 [node name="InGameMenus" type="Node" parent="GameWorld"]
 
-[node name="TactileMap" type="Node" parent="GameWorld/InGameMenus" groups=[
+[node name="MapMenu" type="Node" parent="GameWorld/InGameMenus" groups=[
 "GameContexts",
 ]]
 
