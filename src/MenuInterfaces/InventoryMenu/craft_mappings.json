@@ -1,0 +1,20 @@
+{
+  "white": [
+    ["red", "blue", "green"],
+    ["cyan", "red"],
+    ["magenta", "green"],
+    ["yellow", "blue"]
+  ],
+  "yellow": [
+    ["red", "green"]
+  ],
+  "cyan": [
+    ["blue", "green"]
+  ],
+  "magenta": [
+    ["red", "blue"]
+  ],
+  "red": [],
+  "green": [],
+  "blue": [],
+}
