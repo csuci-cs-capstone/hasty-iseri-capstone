@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://src/MenuInterfaces/InventoryMenu/InventoryMenu.gd" type="Script" id=1]
+[ext_resource path="res://442161__isteak__enter-button-low-robotic.wav" type="AudioStream" id=3]
+
+[node name="InventoryMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="AlertLeftEndReached" type="AudioStreamPlayer2D" parent="."]
+position = Vector2( 0, 4.862 )
+stream = ExtResource( 3 )
+volume_db = 2.0
+
+[node name="AlertRightEndReached" type="AudioStreamPlayer2D" parent="."]
+position = Vector2( 1280, 4.564 )
+stream = ExtResource( 3 )
+volume_db = 2.0
+
+[node name="InputAssistAudio" type="AudioStreamPlayer" parent="."]
