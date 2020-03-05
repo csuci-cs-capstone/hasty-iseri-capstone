@@ -1,10 +1,8 @@
 extends Control
 
 signal waypoint_placed
-<<<<<<< Updated upstream
-=======
 signal waypoint_removed
->>>>>>> Stashed changes
+
 
 var gridline_x_delta
 var gridline_y_delta
@@ -39,12 +37,9 @@ var initial_vertical_border_right_collision = false
 var player_marker = false
 var markers = {"player": player_marker,"resource":[],"waypoint":[]}
 
-<<<<<<< Updated upstream
-=======
 # states: general, place_waypoint
 var substate = "general"
 
->>>>>>> Stashed changes
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# TODO: this needs to be abstracted to load screen resolution
@@ -79,50 +74,6 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 
-<<<<<<< Updated upstream
-	if Input.is_action_pressed("menu_ui_right") and sweepline_y.position.x < x_max:
-		sweepline_y.position.x += sweep_velocity.x*delta
-	elif Input.is_action_pressed("menu_ui_left") and sweepline_y.position.x > x_min:
-		sweepline_y.position.x -= sweep_velocity.x*delta
-	elif Input.is_action_pressed("menu_ui_up") and sweepline_x.position.y > y_min:
-		sweepline_x.position.y -= sweep_velocity.y*delta
-	elif Input.is_action_pressed("menu_ui_down") and sweepline_x.position.y < y_max:
-		sweepline_x.position.y += sweep_velocity.y*delta
-		
-	elif Input.is_action_just_pressed("menu_ui_right") and sweepline_y.position.x >= x_max:
-		issue_vertical_border_feedback()
-	elif Input.is_action_just_pressed("menu_ui_left") and sweepline_y.position.x <= x_min:
-		issue_vertical_border_feedback()
-	elif Input.is_action_just_pressed("menu_ui_up") and sweepline_x.position.y <= y_min:
-		issue_horizontal_border_feedback()
-	elif Input.is_action_just_pressed("menu_ui_down") and sweepline_x.position.y >= y_max:
-		issue_horizontal_border_feedback()
-		
-	if sweepline_y.position.x >= x_max and not initial_vertical_border_right_collision:
-		initial_vertical_border_right_collision = true
-		issue_vertical_border_feedback()
-	elif sweepline_y.position.x <= x_min and not initial_vertical_border_left_collision:
-		initial_vertical_border_left_collision = true
-		issue_vertical_border_feedback()
-	elif sweepline_x.position.y >= y_max and not initial_horizontal_border_up_collision:
-		initial_horizontal_border_up_collision = true
-		issue_horizontal_border_feedback()
-	elif sweepline_x.position.y <= y_min and not initial_horizontal_border_down_collision:
-		initial_horizontal_border_down_collision = true
-		issue_horizontal_border_feedback()
-		
-	if sweepline_y.position.x < x_max:
-		initial_vertical_border_right_collision = false
-	if sweepline_y.position.x > x_min:
-		initial_vertical_border_left_collision = false
-	if sweepline_x.position.y < y_max:
-		initial_horizontal_border_up_collision = false
-	if sweepline_x.position.y > y_min:
-		initial_horizontal_border_down_collision = false
-	
-	crosshair.position.x = sweepline_y.position.x
-	crosshair.position.y = sweepline_x.position.y
-=======
 	if substate == "general":
 		if Input.is_action_pressed("menu_ui_right") and sweepline_y.position.x < x_max:
 			sweepline_y.position.x += sweep_velocity.x*delta
@@ -176,29 +127,20 @@ func _process(delta):
 			pass
 		elif Input.is_action_just_pressed("ui_cancel"):
 			pass
->>>>>>> Stashed changes
 
 func _physics_process(delta):
 	var sweepline_x_collision_sources
 	sweepline_x_collision_sources = sweepline_x.get_overlapping_areas()
 
 func issue_horizontal_border_feedback():
-<<<<<<< Updated upstream
-	var audio_feedback = sweepline_x.get_node("Audio_Border")
-=======
 	var audio_feedback = sweepline_x.get_node("HorizontalAudioBorder")
->>>>>>> Stashed changes
 	if ui_feedback_vibrate_borders == true:
 		Input.start_joy_vibration (0, 0, .8, .2)
 	if not audio_feedback.is_playing():
 		audio_feedback.play()
 
 func issue_vertical_border_feedback():
-<<<<<<< Updated upstream
-	var audio_feedback = sweepline_y.get_node("Audio_Border")
-=======
 	var audio_feedback = sweepline_y.get_node("VerticalAudioBorder")
->>>>>>> Stashed changes
 	if ui_feedback_vibrate_borders == true:
 		Input.start_joy_vibration (0, 0, .8, .2)
 	if not audio_feedback.is_playing():
@@ -208,11 +150,8 @@ func on_HorizontalGridline_entered(area_id, source):
 	if area_id == sweepline_x:
 		if ui_feedback_vibrate_gridlines == true:
 			Input.start_joy_vibration (0, .4, 0, .1)
-<<<<<<< Updated upstream
-		source.get_node("Audio_Midline").play()
-=======
 		source.get_node("AudioMidline").play()
->>>>>>> Stashed changes
+
 	
 func on_VerticalGridline_entered(area_id, source):
 	if area_id == sweepline_y:
@@ -220,11 +159,7 @@ func on_VerticalGridline_entered(area_id, source):
 		print('hit' + str(debug))
 		if ui_feedback_vibrate_gridlines == true:
 			Input.start_joy_vibration (0, .4, 0, .1)
-<<<<<<< Updated upstream
-		source.get_node("Audio_Midline").play()
-=======
 		source.get_node("AudioMidline").play()
->>>>>>> Stashed changes
 
 # TODO: add functionality, pass waypoint data through signal so corresponding object can be created/ updated
 func place_waypoint():
