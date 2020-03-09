@@ -1,0 +1,53 @@
+{
+  "artifacts": [],
+  "obstacles": [],
+  "resources": {
+      "blue": {
+          "name": "speech_blue.wav",
+          "description": "speech_blue_description.wav",
+          "craft_mappings": []
+      },
+      "cyan": {
+          "name": "speech_cyan.wav",
+          "description": "speech_cyan_description.wav",
+          "craft_mappings": [
+            ["blue", "green"]
+          ]
+      },
+      "green": {
+          "name": "speech_green.wav",
+          "description": "speech_green_description.wav",
+          "craft_mappings": []
+      },
+      "magenta": {
+          "name": "speech_magenta.wav",
+          "description": "speech_magenta_description.wav",
+          "craft_mappings": [
+            ["red", "blue"]
+          ]
+      },
+      "red":
+      {
+          "name": "speech_red.wav",
+          "description": "speech_red_description.wav",
+          "craft_mappings": []
+      },
+      "white": {
+          "name": "speech_white.wav",
+          "description": "speech_white_description.wav",
+          "craft_mappings": [
+            ["red", "blue", "green"],
+            ["cyan", "red"],
+            ["magenta", "green"],
+            ["yellow", "blue"]
+          ]
+      },
+      "yellow": {
+          "name": "speech_yellow.wav",
+          "description": "speech_yellow_description.wav",
+          "craft_mappings": [
+            ["red", "green"]
+          ]
+      }
+  }
+}
