@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/141334__lluiset7__error-2.wav-898ed780118e3fe0fd7eb11a69a492f5.sample"
+
+[deps]
+
+source_file="res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav"
+dest_files=[ "res://.import/141334__lluiset7__error-2.wav-898ed780118e3fe0fd7eb11a69a492f5.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

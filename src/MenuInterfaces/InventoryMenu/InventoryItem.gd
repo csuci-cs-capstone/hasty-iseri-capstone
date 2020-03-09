@@ -2,27 +2,17 @@ extends Node
 
 # Options: none
 var type
-var has_examine = false
 var has_consume = false
-var has_craft = false
-var craft_compatibility_list = []
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# TODO: implement audio resource loading; load all inventory item sounds here?
-	
 	type = "empty"
-
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
-
-func add_craft_compatible_item(items):
-	if typeof(items) == TYPE_STRING:
-		items = [items]
-	for item in items:
-		craft_compatibility_list.append(item)
-		
+	
 func consume():
 	if not $ConsumeSound.is_playing():
 		$ConsumeSound.play()
@@ -30,6 +20,9 @@ func consume():
 func deselect():
 	stop_all_audio()
 	
+func get_type():
+	return type
+
 func load_type_audio():
 	if type:
 		pass
@@ -57,8 +50,8 @@ func set_description_to_speech(description_to_speech):
 func set_name_to_speech(name_to_speech):
 	$NameToSpeech.set_stream(name_to_speech)
 	
-func set_type(type="empty"):
-	self.type = type
+func set_type(arg_type="empty"):
+	self.type = arg_type
 	
 func set_whisper_delay_left(delay):
 	$WhisperDelayLeft.wait_time = delay

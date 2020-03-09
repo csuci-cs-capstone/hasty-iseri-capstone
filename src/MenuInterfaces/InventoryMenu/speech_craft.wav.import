@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/speech_craft.wav-184fc2b1e165d1226293fff71c09e06f.sample"
+
+[deps]
+
+source_file="res://src/MenuInterfaces/InventoryMenu/speech_craft.wav"
+dest_files=[ "res://.import/speech_craft.wav-184fc2b1e165d1226293fff71c09e06f.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
