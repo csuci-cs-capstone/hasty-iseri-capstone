@@ -20,6 +20,9 @@ func consume():
 func deselect():
 	stop_all_audio()
 	
+func get_type():
+	return type
+
 func load_type_audio():
 	if type:
 		pass
@@ -47,8 +50,8 @@ func set_description_to_speech(description_to_speech):
 func set_name_to_speech(name_to_speech):
 	$NameToSpeech.set_stream(name_to_speech)
 	
-func set_type(type="empty"):
-	self.type = type
+func set_type(arg_type="empty"):
+	self.type = arg_type
 	
 func set_whisper_delay_left(delay):
 	$WhisperDelayLeft.wait_time = delay
