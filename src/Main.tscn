@@ -1,6 +1,7 @@
-[gd_scene load_steps=2 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://src/Main.gd" type="Script" id=1]
+[ext_resource path="res://src/Player.gd" type="Script" id=2]
 
 [node name="Main" type="Node"]
 script = ExtResource( 1 )
@@ -45,7 +46,12 @@ script = ExtResource( 1 )
 
 [node name="Waypoints" type="Node" parent="GameWorld/TerrainMap"]
 
+<<<<<<< Updated upstream
 [node name="PlayerAvatar" type="Node" parent="GameWorld"]
+=======
+[node name="Player" type="Node" parent="GameWorld/Actors"]
+script = ExtResource( 2 )
+>>>>>>> Stashed changes
 
 [node name="InventoryItems" type="Node" parent="GameWorld"]
 
