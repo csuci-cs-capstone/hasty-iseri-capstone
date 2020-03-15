@@ -1,11 +1,8 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/MenuInterfaces/MapMenu/TactileMap.gd" type="Script" id=1]
 [ext_resource path="res://src/MenuInterfaces/red.png" type="Texture" id=2]
 [ext_resource path="res://src/MenuInterfaces/442161__isteak__enter-button-low-robotic.wav" type="AudioStream" id=4]
-[ext_resource path="res://src/MenuInterfaces/MapMenu/Marker.tscn" type="PackedScene" id=5]
-
-
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 1280, 1 )
@@ -58,9 +55,6 @@ shape = SubResource( 2 )
 [node name="Sprite" type="Sprite" parent="VerticalSweepline/CollisionShape2D"]
 scale = Vector2( 0.0178241, 12.1653 )
 texture = ExtResource( 2 )
-
-[node name="SampleResourceMarker" parent="." instance=ExtResource( 5 )]
-position = Vector2( 150, 150 )
 
 [node name="Crosshair" type="Area2D" parent="."]
 
