@@ -35,16 +35,18 @@ var initial_vertical_border_left_collision = false
 var initial_vertical_border_right_collision = false
 
 var player_marker = false
-var markers = {"player": player_marker,"resource":[],"waypoint":[]}
+var markers = {"player": player_marker,"resources":[],"waypoints":[]}
 
-var waypoints = []
-var current_index = 0
+var current_waypoint_index = 0
 
 #DEBUG
+var speech_placed = load("res://src/MenuInterfaces/MapMenu/speech_placed.wav")
+var speech_player = load("res://src/MenuInterfaces/MapMenu/speech_player.wav")
 var speech_waypoint1 = load("res://src/speech_waypoint1.wav")
 var speech_waypoint2 = load("res://src/speech_waypoint2.wav")
 var speech_waypoint3 = load("res://src/speech_waypoint3.wav")
 var speech_waypoint4 = load("res://src/speech_waypoint4.wav")
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -75,6 +77,7 @@ func _ready():
 		player_marker.position.y = 20
 	
 	load_marker_data()
+	current_waypoint_selected()
 			
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -96,16 +99,16 @@ func _process(delta):
 	elif Input.is_action_just_pressed("menu_ui_down") and sweepline_x.position.y >= y_max:
 		issue_horizontal_border_feedback()
 	
-	elif Input.is_action_just_pressed("map_menu_select_next_waypoint"):
+	if Input.is_action_just_pressed("map_menu_select_next_waypoint"):
 		navigate_to_waypoint("next")
 	elif Input.is_action_just_pressed("map_menu_select_previous_waypoint"):
 		navigate_to_waypoint("previous")
 	elif Input.is_action_just_pressed("map_menu_update_waypoint"):
 		update_selected_waypoint()
 	elif Input.is_action_just_pressed("map_menu_snap_to_player"):
-		pass
-	elif Input.is_action_just_pressed("map_menu_update_waypoint"):
-		pass
+		snap_to_player_marker_position()
+	elif Input.is_action_just_pressed("map_menu_snap_to_waypoint"):
+		snap_to_waypoint_marker_position()
 	elif Input.is_action_just_pressed("menu_ui_cancel"):
 		pass
 	
@@ -135,11 +138,18 @@ func _process(delta):
 	crosshair.position.y = sweepline_x.position.y
 
 func current_waypoint_selected():
-	waypoints[current_index].speak_name()
+	#markers['waypoints'][current_waypoint_index].speak_name()
+	$MarkerAudioQueue.add_to_queue(markers['waypoints'][current_waypoint_index].get_name_to_speech())
 
 # DEBUG
 func debug_load_player_marker_data():
-	pass
+	markers["player"] = Marker.instance()
+	add_child(markers["player"])
+	markers["player"].set_name_to_speech(speech_player)
+	markers['player'].connect("area_entered",self,"_on_ResourceMarker_area_entered", [markers['player']])
+	randomize()
+	markers["player"].position.x = rand_range(0,1280)
+	markers["player"].position.y = rand_range(0,720)
 
 # DEBUG
 func debug_load_resource_marker_data():
@@ -152,12 +162,12 @@ func debug_load_waypoint_marker_data():
 	
 	var index = 0
 	while index < len(waypoints_to_generate):
-		waypoints.append(Marker.instance())
-		waypoints[len(waypoints)-1].set_type(waypoints_to_generate[index])
-		waypoints[len(waypoints)-1].set_name_to_speech(waypoint_name_to_speech[index])
-		waypoints[len(waypoints)-1].connect("area_entered",self,"_on_ResourceMarker_area_entered")
-		waypoints[len(waypoints)-1].connect("area_exited",self,"_on_ResourceMarker_area_exited")
-		add_child(waypoints[len(waypoints)-1])
+		markers['waypoints'].append(Marker.instance())
+		markers['waypoints'][len(markers['waypoints'])-1].set_type(waypoints_to_generate[index])
+		markers['waypoints'][len(markers['waypoints'])-1].set_name_to_speech(waypoint_name_to_speech[index])
+		markers['waypoints'][len(markers['waypoints'])-1].connect("area_entered",self,"_on_ResourceMarker_area_entered", [markers['waypoints'][len(markers['waypoints'])-1]])
+		markers['waypoints'][len(markers['waypoints'])-1].connect("area_exited",self,"_on_ResourceMarker_area_exited")
+		add_child(markers['waypoints'][len(markers['waypoints'])-1])
 		index = index + 1
 
 func load_marker_data():
@@ -189,18 +199,18 @@ func issue_vertical_border_feedback():
 		audio_feedback.play()
 
 func navigate_to_waypoint(direction):
-	var previous_index = current_index
-	if len(waypoints) > 0:
+	var previous_waypoint_index = current_waypoint_index
+	if len(markers['waypoints']) > 0:
 		if direction == "next":
-			current_index = (current_index + 1)%len(waypoints)
+			current_waypoint_index = (current_waypoint_index + 1)%len(markers['waypoints'])
 		elif direction == "previous":
-			current_index = (current_index - 1)
-			if current_index < 0:
-				current_index = len(waypoints) - 1
-		if len(waypoints) > 1:
-			waypoints[previous_index].stop_all_audio()
+			current_waypoint_index = (current_waypoint_index - 1)
+			if current_waypoint_index < 0:
+				current_waypoint_index = len(markers['waypoints']) - 1
+		if len(markers['waypoints']) > 1:
+			$MarkerAudioQueue.stop_and_clear()
 		current_waypoint_selected()
-		print("Current waypoint: " + str(current_index))
+		print("Current waypoint: " + str(current_waypoint_index))
 
 func on_HorizontalGridline_entered(area_id, source):
 	if area_id == sweepline_x:
@@ -215,14 +225,28 @@ func on_VerticalGridline_entered(area_id, source):
 		if ui_feedback_vibrate_gridlines == true:
 			Input.start_joy_vibration (0, .4, 0, .1)
 		source.get_node("AudioMidline").play()
-
-# TODO: add functionality, pass waypoint data through signal so corresponding object can be created/ updated
-func update_selected_waypoint():
-	emit_signal("waypoint_placed")
 	
-# TODO: add functionality
+func _on_ResourceMarker_area_entered(area_id, source):
+	# TODO: this overrides placement audio feedback, which it should not
+	if area_id == crosshair:
+		$MarkerAudioQueue.stop_and_clear()
+		$MarkerAudioQueue.add_to_queue(source.get_name_to_speech())
+		Input.start_joy_vibration (0, 1, .4, .16)
+		
+func _on_ResourceMarker_area_exited(area_id):
+	if area_id == sweepline_x:
+		pass #TODO
+	elif area_id == sweepline_y:
+		pass #TODO
+
+#TODO: add functionality
 func snap_to_player_marker_position():
 	pass
+
+#TODO: add functionality
+func snap_to_waypoint_marker_position():
+	markers["waypoints"][current_waypoint_index].speak_name()
+	$Crosshair.position = markers["waypoints"][current_waypoint_index].position
 	
 func spawn_horizontal_gridlines():
 	gridline_y_delta = y_max / number_of_gridlines.y
@@ -239,22 +263,11 @@ func spawn_vertical_gridlines():
 		next_vertical_gridline.position.x = (gridline+1)*gridline_x_delta
 		next_vertical_gridline.connect("area_entered_modified",self,"on_VerticalGridline_entered")
 		add_child(next_vertical_gridline)
-		
-func _on_ResourceMarker_area_entered(area_id):
-	if area_id == sweepline_x:
-		Input.start_joy_vibration (0, .6, 0, .16)
-		print("collide") #TODO
-	elif area_id == sweepline_y:
-		Input.start_joy_vibration (0, .6, 0, .16)
-		print("collide")
-	elif area_id == crosshair:
-		Input.start_joy_vibration (0, 1, .4, .16)
-		
-func _on_ResourceMarker_area_exited(area_id):
-	if area_id == sweepline_x:
-		pass #TODO
-	elif area_id == sweepline_y:
-		pass #TODO
 
-
+# TODO: add functionality, pass waypoint data through signal so corresponding object can be created/ updated
+func update_selected_waypoint():
+	emit_signal("waypoint_placed")
+	$MarkerAudioQueue.add_to_queue(markers["waypoints"][current_waypoint_index].get_name_to_speech())
+	$MarkerAudioQueue.add_to_queue(speech_placed)
+	markers["waypoints"][current_waypoint_index].position = $Crosshair.position
 	
