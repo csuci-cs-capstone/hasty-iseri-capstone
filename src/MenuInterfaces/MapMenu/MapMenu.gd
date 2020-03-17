@@ -39,10 +39,12 @@ var markers = {"player": player_marker,"resources":[],"waypoints":[]}
 
 var current_waypoint_index = 0
 var waypoint_just_placed = false
+var marker_detected_by_sweepline = false
 
 #DEBUG
 var speech_placed = load("res://src/MenuInterfaces/MapMenu/speech_placed.wav")
 var speech_player = load("res://src/MenuInterfaces/MapMenu/speech_player.wav")
+var speech_position = load("res://src/MenuInterfaces/MapMenu/speech_position.wav")
 var speech_selected = load("res://src/MenuInterfaces/MapMenu/speech_selected.wav")
 var speech_waypoint1 = load("res://src/speech_waypoint1.wav")
 var speech_waypoint2 = load("res://src/speech_waypoint2.wav")
@@ -258,13 +260,18 @@ func _on_ResourceMarker_area_exited(area_id):
 
 #TODO: add functionality
 func snap_to_player_marker_position():
-	pass
+	##$MarkerAudioQueue.add_to_queue(speech_player)
+	##$MarkerAudioQueue.add_to_queue(speech_position)
+	$VerticalSweepline.position.x = markers["player"].position.x
+	$HorizontalSweepline.position.y = markers["player"].position.y
 
 #TODO: add functionality
 func snap_to_waypoint_marker_position():
-	markers["waypoints"][current_waypoint_index].speak_name()
-	$Crosshair.position = markers["waypoints"][current_waypoint_index].position
-	
+	##$MarkerAudioQueue.add_to_queue(markers["waypoints"][current_waypoint_index].get_name_to_speech())
+	##$MarkerAudioQueue.add_to_queue(speech_position)
+	$VerticalSweepline.position.x = markers["waypoints"][current_waypoint_index].position.x
+	$HorizontalSweepline.position.y = markers["waypoints"][current_waypoint_index].position.y
+
 func spawn_horizontal_gridlines():
 	gridline_y_delta = y_max / number_of_gridlines.y
 	for gridline in (number_of_gridlines.y-1):
