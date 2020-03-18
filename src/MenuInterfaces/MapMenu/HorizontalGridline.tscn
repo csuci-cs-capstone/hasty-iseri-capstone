@@ -2,7 +2,8 @@
 
 [ext_resource path="res://src/MenuInterfaces/213148__complex-waveform__click.wav" type="AudioStream" id=1]
 [ext_resource path="res://src/MenuInterfaces/red.png" type="Texture" id=2]
-[ext_resource path="res://src/MenuInterfaces/TactileMap/HorizontalGridline.gd" type="Script" id=4]
+[ext_resource path="res://src/MenuInterfaces/MapMenu/HorizontalGridline.gd" type="Script" id=4]
+
 
 [sub_resource type="RectangleShape2D" id=1]
 extents = Vector2( 1280, 0.2 )

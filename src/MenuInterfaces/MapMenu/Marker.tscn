@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://src/MenuInterfaces/red.png" type="Texture" id=1]
-[ext_resource path="res://src/MenuInterfaces/TactileMap/Marker.gd" type="Script" id=2]
+[ext_resource path="res://src/MenuInterfaces/MapMenu/Marker.gd" type="Script" id=2]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -14,7 +14,9 @@ __meta__ = {
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
-[node name="FeedbackSound" type="AudioStreamPlayer2D" parent="."]
+[node name="NameToSpeech" type="AudioStreamPlayer" parent="."]
+
+[node name="IdentitySound" type="AudioStreamPlayer2D" parent="."]
 
 [node name="DeveloperVisual" type="Sprite" parent="."]
 position = Vector2( 6.67572e-06, -0.0711982 )

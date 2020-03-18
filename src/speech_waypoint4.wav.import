@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/speech_waypoint4.wav-8ec351dc13cd66adf74657fdc7743ea0.sample"
+
+[deps]
+
+source_file="res://src/speech_waypoint4.wav"
+dest_files=[ "res://.import/speech_waypoint4.wav-8ec351dc13cd66adf74657fdc7743ea0.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=false
+edit/loop=false
+compress/mode=0

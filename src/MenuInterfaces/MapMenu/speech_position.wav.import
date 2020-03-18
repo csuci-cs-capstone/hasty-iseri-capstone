@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/speech_position.wav-d33fd7f3ea7ea7f6f03daca296f738c6.sample"
+
+[deps]
+
+source_file="res://src/MenuInterfaces/MapMenu/speech_position.wav"
+dest_files=[ "res://.import/speech_position.wav-d33fd7f3ea7ea7f6f03daca296f738c6.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=false
+edit/loop=false
+compress/mode=0

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/speech_placed.wav-37c3c89a216ce2c386dcf52ab5b6914f.sample"
+
+[deps]
+
+source_file="res://src/MenuInterfaces/MapMenu/speech_placed.wav"
+dest_files=[ "res://.import/speech_placed.wav-37c3c89a216ce2c386dcf52ab5b6914f.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=false
+edit/loop=false
+compress/mode=0
