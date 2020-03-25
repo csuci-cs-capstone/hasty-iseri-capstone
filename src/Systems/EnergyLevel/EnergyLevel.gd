@@ -16,6 +16,9 @@ var magnitude_velocity = 0
 
 var horizontal_max = 1280 # TODO: get from resolution definition mechanism
 
+# DEBUG
+const DEBUG_ENERGY_SYSTEMS = false
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	energy_level = 0
@@ -24,16 +27,15 @@ func _ready():
 func _process(delta):
 	if magnitude_feedback_active:
 		update_magnitude_feedback_position(delta)
-		#update_magnitude_feedback_timer(delta)
 	# DEBUG
-	if Input.is_action_just_pressed("ui_select"):
-		init_magnituted_feedback()
-	elif Input.is_action_just_pressed("ui_up"):
-		energy_level = energy_level + 2
-		print("Energy level: " + str(energy_level))
-	elif Input.is_action_just_pressed("ui_down"):
-		if energy_level >= 2:
-			energy_level = energy_level - 2
+	if DEBUG_ENERGY_SYSTEMS:
+		if Input.is_action_just_pressed("ui_select"):
+			init_magnituted_feedback()
+		elif Input.is_action_just_pressed("ui_up"):
+			increase(1)
+			print("Energy level: " + str(energy_level))
+		elif Input.is_action_just_pressed("ui_down"):
+			decrease(1)
 			print("Energy level: " + str(energy_level))
 
 func decrease(level_delta):
@@ -41,10 +43,16 @@ func decrease(level_delta):
 		energy_level = energy_level - level_delta
 		if energy_level <= 0:
 			emit_signal("energy_level_zero")
-	issue_marginal_feedback(audio_energy_decreased)
+		issue_marginal_feedback(audio_energy_decreased)
+
+func get_decrease_audio_feedback():
+	return audio_energy_decreased
 
 func get_energy_level():
 	return energy_level
+
+func get_increase_audio_feedback():
+	return audio_energy_increased
 
 func increase(level_delta):
 	if level_delta > 0:
@@ -55,7 +63,7 @@ func init_magnituted_feedback():
 	if energy_level > 0:
 		magnitude_feedback_active = true
 		magnitude_feedback_timer = energy_level
-		magnitude_velocity = horizontal_max / energy_level
+		magnitude_velocity = horizontal_max / energy_level*3
 
 func issue_magnitude_feedback():
 	if not $MagnitudeAudio.is_playing():
@@ -79,10 +87,4 @@ func update_magnitude_feedback_position(delta):
 	elif $MagnitudeAudio.position.x >= horizontal_max and not $MagnitudeAudio.is_playing():
 		reset_magnitude_audio()
 
-func update_magnitude_feedback_timer(delta):
-	magnitude_feedback_timer = magnitude_feedback_timer - delta
-	issue_magnitude_feedback()
-	if magnitude_feedback_timer < 0:
-		reset_magnitude_audio()
-		
 
