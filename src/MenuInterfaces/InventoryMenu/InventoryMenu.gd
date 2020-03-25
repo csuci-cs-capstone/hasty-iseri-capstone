@@ -4,7 +4,6 @@ extends Control
 # var a = 2
 # var b = "text"
 var current_index
-var current_capacity
 var inventory_items = []
 var marked_for_craft = []
 
@@ -16,6 +15,10 @@ const DEBUG_WHISPER_DELAY_RIGHT = .32
 var substate
 
 var debug_cycle_menu = false
+
+var audio_craft_success_sound = load("res://src/MenuInterfaces/InventoryMenu/441812__fst180081__180081-hammer-on-anvil-01.wav")
+var audio_craft_failed_sound = load("res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
+var audio_close_craft_alert = load("res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
 
 var speech_assist_examine = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_examine.wav")
 var speech_assist_consume = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_consume.wav")
@@ -37,7 +40,6 @@ func _ready():
 	debug_load_item_definitions()
 	debug_load_name_to_speech()
 	$NavigateSound.connect("finished",self,"on_NavigateSound_finished")
-	current_capacity = len(inventory_items)
 	substate = "items_list_menu"
 	current_item_selected()
 	
@@ -47,9 +49,9 @@ func _process(_delta):
 		describe_input_option_to_user()
 	elif substate == "items_list_menu":
 		if Input.is_action_just_pressed("menu_ui_right"):
-			navigate_to_next_item()
+			navigate_to_item("next")
 		elif Input.is_action_just_pressed("menu_ui_left"):
-			navigate_to_previous_item()
+			navigate_to_item("previous")
 		elif Input.is_action_just_pressed("menu_ui_repeat"):
 			current_item_selected()
 		elif Input.is_action_just_pressed("inventory_menu_craft"):
@@ -57,7 +59,7 @@ func _process(_delta):
 		elif Input.is_action_just_pressed("inventory_menu_examine"):
 			examine_selected_item()
 		elif Input.is_action_just_pressed("inventory_menu_consume"):
-			pass #TODO: initialize consumption mechanic
+			consume_selected_item()
 		elif Input.is_action_just_pressed("inventory_menu_confirm_craft"):
 			attempt_craft_with_marked_items()
 	elif substate == "items_popup_menu":
@@ -71,7 +73,7 @@ func add_inventory_item(type):
 	var item_definition = gameworld_object_definitions["resources"][type]
 	var pwd_path = "res://src/MenuInterfaces/InventoryMenu/"
 	inventory_items.append(InventoryItem.instance())
-	current_capacity = len(inventory_items)
+	var current_capacity = len(inventory_items)
 	add_child(inventory_items[current_capacity-1])
 	inventory_items[current_capacity-1].set_type(type)
 	inventory_items[current_capacity-1].set_name_to_speech(load(pwd_path + item_definition["name"]))
@@ -123,8 +125,12 @@ func attempt_craft_with_marked_items():
 	for item_index in items_to_craft_indecies:
 		marked_for_craft[item_index] = false
 
+# TODO: initialize consumption mechanic
+func consume_selected_item():
+	pass
+
 func current_item_selected(end_reached=false):
-	if current_capacity > 0:
+	if len(inventory_items) > 0:
 		inventory_items[current_index].select()
 		if marked_for_craft[current_index] and not end_reached:
 			alert_marked_for_craft()
@@ -150,7 +156,6 @@ func debug_load_item_definitions():
 		print("ERROR: gameworld_object_definitions parse result invalid")
 		return
 
-	
 	for resource_type in gameworld_object_definitions["resources"].keys():
 		craft_mappings[resource_type] = gameworld_object_definitions["resources"][resource_type]["craft_mappings"]
 
@@ -204,7 +209,7 @@ func get_craft_result(items_to_craft_indecies):
 func list_items_marked_for_craft():
 	var index = 0
 	if inventory_items:
-		while index < current_capacity:
+		while index < len(inventory_items):
 			if marked_for_craft[index]:
 				while inventory_items[index].get_node("NameToSpeech").is_playing():
 					pass
@@ -215,42 +220,37 @@ func load_menu_end_alert_positions():
 	# TODO: use screen resolution to position 2D Audio alert nodes for reaching menu end
 	pass
 
-func navigate_to_next_item():
+func navigate_to_item(direction):
 	var end_reached = false
 	Input.stop_joy_vibration(0)
-	if current_index == current_capacity - 1 or current_capacity == 0:
-		if not debug_cycle_menu:
+	if direction == "next":
+		if current_index == len(inventory_items) - 1 or len(inventory_items) == 0:
 			alert_right_end_reached()
 			end_reached = true
 		else:
 			inventory_items[0].stop_all_audio()
 			current_index = 0	
-	else:
-		current_index = current_index + 1
-		$NavigateSound.play()
-	if current_capacity > 1:
-		inventory_items[current_index-1].stop_all_audio()
-	if current_capacity > 0:
-		inventory_items[current_index].stop_all_audio()
-	current_item_selected(end_reached)
-		
-func navigate_to_previous_item():
-	var end_reached = false
-	Input.stop_joy_vibration(0)
-	if current_index == 0:
-		if not debug_cycle_menu:
+			current_index = current_index + 1
+			$NavigateSound.play()
+		if len(inventory_items) > 1:
+			inventory_items[current_index-1].stop_all_audio()
+		if len(inventory_items) > 0:
+			inventory_items[current_index].stop_all_audio()
+
+	elif direction == "previous":
+		if current_index == 0:
 			alert_left_end_reached()
 			end_reached = true
 		else:
-			inventory_items[current_capacity - 1].stop_all_audio()
-			current_index = current_capacity - 1
-	else:
-		current_index = current_index - 1
-		$NavigateSound.play()
-	if current_capacity > 1:
-		inventory_items[current_index+1].stop_all_audio()
-	if current_capacity > 0:
-		inventory_items[current_index].stop_all_audio()
+			inventory_items[len(inventory_items) - 1].stop_all_audio()
+			current_index = len(inventory_items) - 1
+			current_index = current_index - 1
+			$NavigateSound.play()
+			if len(inventory_items) > 1:
+				inventory_items[current_index+1].stop_all_audio()
+			if len(inventory_items) > 0:
+				inventory_items[current_index].stop_all_audio()
+				
 	current_item_selected(end_reached)
 
 func on_NavigateSound_finished():
@@ -261,7 +261,7 @@ func on_WhisperDelayLeft_timeout():
 		inventory_items[current_index-1].whisper_name_left()
 
 func on_WhisperDelayRight_timeout():
-	if current_index < current_capacity - 1:
+	if current_index < len(inventory_items) - 1:
 		inventory_items[current_index+1].whisper_name_right()
 
 func toggle_current_item_craft_mark():

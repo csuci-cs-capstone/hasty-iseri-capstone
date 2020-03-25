@@ -4,6 +4,11 @@ extends Node
 var type
 var has_consume = false
 
+var consume_sound
+var identity_sound
+var name_to_speech
+var description_to_speech
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# TODO: implement audio resource loading; load all inventory item sounds here?

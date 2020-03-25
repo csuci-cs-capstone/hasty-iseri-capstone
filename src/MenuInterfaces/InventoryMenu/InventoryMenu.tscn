@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://src/MenuInterfaces/InventoryMenu/InventoryMenu.gd" type="Script" id=1]
 [ext_resource path="res://src/MenuInterfaces/213148__complex-waveform__click.wav" type="AudioStream" id=2]
@@ -6,6 +6,7 @@
 [ext_resource path="res://src/MenuInterfaces/InventoryMenu/speech_craft.wav" type="AudioStream" id=4]
 [ext_resource path="res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav" type="AudioStream" id=5]
 [ext_resource path="res://src/MenuInterfaces/InventoryMenu/441812__fst180081__180081-hammer-on-anvil-01.wav" type="AudioStream" id=6]
+[ext_resource path="res://src/SingleAudioPlayerQueue.tscn" type="PackedScene" id=7]
 
 [node name="InventoryMenu" type="Control"]
 anchor_right = 1.0
@@ -42,3 +43,9 @@ stream = ExtResource( 6 )
 stream = ExtResource( 5 )
 volume_db = 1.0
 pitch_scale = 0.9
+
+[node name="WhisperDelayLeft" type="Timer" parent="."]
+
+[node name="WhisperDelayRight" type="Timer" parent="."]
+
+[node name="SingleAudioPlayerQueue" parent="." instance=ExtResource( 7 )]
