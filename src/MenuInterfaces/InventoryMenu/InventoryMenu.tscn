@@ -48,4 +48,14 @@ pitch_scale = 0.9
 
 [node name="WhisperDelayRight" type="Timer" parent="."]
 
-[node name="SingleAudioPlayerQueue" parent="." instance=ExtResource( 7 )]
+[node name="SpeechAudioQueue" parent="." instance=ExtResource( 7 )]
+
+[node name="SFXAudioQueue" parent="." instance=ExtResource( 7 )]
+
+[node name="SpeechAudioPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="WhisperLeftAudioPlayer" type="AudioStreamPlayer" parent="."]
+bus = "L_UI_Whisper"
+
+[node name="WhisperRightAudioPlayer" type="AudioStreamPlayer" parent="."]
+bus = "R_UI_Whisper"

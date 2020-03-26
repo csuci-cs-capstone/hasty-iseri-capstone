@@ -7,14 +7,8 @@ var current_index
 var inventory_items = []
 var marked_for_craft = []
 
-const DEBUG_WHISPER_VOLUME = -35
-const DEBUG_WHISPER_DELAY_LEFT = .22
-const DEBUG_WHISPER_DELAY_RIGHT = .32
-
-# options: items_list_menu, item_popup_menu, items_craft_menu
-var substate
-
-var debug_cycle_menu = false
+var whisper_delay_timer_left
+var whisper_delay_timer_right
 
 var audio_craft_success_sound = load("res://src/MenuInterfaces/InventoryMenu/441812__fst180081__180081-hammer-on-anvil-01.wav")
 var audio_craft_failed_sound = load("res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
@@ -30,6 +24,9 @@ var speech_assist_cancel_craft = load("res://src/MenuInterfaces/InventoryMenu/sp
 var craft_mappings = {}
 var gameworld_object_definitions
 var InventoryItem
+const DEBUG_WHISPER_VOLUME = -35
+const DEBUG_WHISPER_DELAY_LEFT = .22
+const DEBUG_WHISPER_DELAY_RIGHT = .32
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -40,14 +37,13 @@ func _ready():
 	debug_load_item_definitions()
 	debug_load_name_to_speech()
 	$NavigateSound.connect("finished",self,"on_NavigateSound_finished")
-	substate = "items_list_menu"
 	current_item_selected()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	if Input.is_action_pressed("menu_ui_assist"):
 		describe_input_option_to_user()
-	elif substate == "items_list_menu":
+	else:
 		if Input.is_action_just_pressed("menu_ui_right"):
 			navigate_to_item("next")
 		elif Input.is_action_just_pressed("menu_ui_left"):
@@ -62,11 +58,6 @@ func _process(_delta):
 			consume_selected_item()
 		elif Input.is_action_just_pressed("inventory_menu_confirm_craft"):
 			attempt_craft_with_marked_items()
-	elif substate == "items_popup_menu":
-		if Input.is_action_just_pressed("menu_ui_cancel"):
-			pass #TODO
-	else:
-		print("ERROR: InventoryMenu has invalid substate")
 
 # TODO: determine how to migrate this method to the Inventory scene
 func add_inventory_item(type):
@@ -78,10 +69,6 @@ func add_inventory_item(type):
 	inventory_items[current_capacity-1].set_type(type)
 	inventory_items[current_capacity-1].set_name_to_speech(load(pwd_path + item_definition["name"]))
 	inventory_items[current_capacity-1].set_description_to_speech(load(pwd_path + item_definition["description"]))
-	inventory_items[current_capacity-1].set_whisper_delay_left(DEBUG_WHISPER_DELAY_LEFT)
-	inventory_items[current_capacity-1].set_whisper_delay_left(DEBUG_WHISPER_DELAY_RIGHT)
-	inventory_items[current_capacity-1].get_node("WhisperDelayLeft").connect("timeout",self,"on_WhisperDelayLeft_timeout")
-	inventory_items[current_capacity-1].get_node("WhisperDelayRight").connect("timeout",self,"on_WhisperDelayRight_timeout")
 	marked_for_craft.append(false)
 
 func alert_left_end_reached():
@@ -98,31 +85,20 @@ func alert_right_end_reached():
 		Input.start_joy_vibration (0, 0, .8, .2)
 
 func attempt_craft_with_marked_items():
-	var items_to_craft_indecies = []
+	var items_to_craft_indecies = get_items_to_craft_indecies()
 	var item_index = 0
-	while item_index < len(inventory_items):
-		if marked_for_craft[item_index]:
-			items_to_craft_indecies.append(item_index)
-		item_index = item_index + 1
 	var craft_result = get_craft_result(items_to_craft_indecies)
 	if craft_result:
-		if not $CraftSuccessSound.is_playing():
-			$CraftSuccessSound.play()
-		# remove items_to_craft from inventory_items
-		var updated_inventory_items = []
-		item_index = 0
-		while item_index < len(inventory_items):
-			if not marked_for_craft[item_index]:
-				updated_inventory_items.append(inventory_items[item_index])
-			item_index = item_index + 1
-		inventory_items = updated_inventory_items
-		# add item_definitions[craft_result] to inventory_items
+		issue_craft_success_feedback()
+		remove_crafted_items_from_inventory()
 		add_inventory_item(craft_result)
 	else:
-		if not $CraftFailedSound.is_playing():
-			$CraftFailedSound.play()
+		issue_craft_failed_feedback()
 			
-	for item_index in items_to_craft_indecies:
+	clear_marked_for_craft_via_indecies(items_to_craft_indecies)
+	
+func clear_marked_for_craft_via_indecies(item_indecies):
+	for item_index in item_indecies:
 		marked_for_craft[item_index] = false
 
 # TODO: initialize consumption mechanic
@@ -131,7 +107,7 @@ func consume_selected_item():
 
 func current_item_selected(end_reached=false):
 	if len(inventory_items) > 0:
-		inventory_items[current_index].select()
+		issue_selected_item_name_to_speech()
 		if marked_for_craft[current_index] and not end_reached:
 			alert_marked_for_craft()
 		
@@ -153,7 +129,7 @@ func debug_load_item_definitions():
 	
 	gameworld_object_definitions = parse_json(gameworld_object_definitions_data)
 	if not typeof(gameworld_object_definitions) == TYPE_DICTIONARY:
-		print("ERROR: gameworld_object_definitions parse result invalid")
+		print("ERROR: gameworld_object_definitions parse result invalid; is type " + str(typeof(gameworld_object_definitions)))
 		return
 
 	for resource_type in gameworld_object_definitions["resources"].keys():
@@ -167,37 +143,33 @@ func debug_load_name_to_speech():
 
 func describe_input_option_to_user():
 	#TODO: determine how to structure this, and whether a singleton would be better
-	if substate == "items_list_menu":
-		if Input.is_action_just_pressed("menu_ui_right"):
-			pass
-		elif Input.is_action_just_pressed("menu_ui_left"):
-			pass
-		elif Input.is_action_just_pressed("menu_ui_repeat"):
-			pass
-		elif Input.is_action_just_pressed("inventory_menu_craft"):
-			$InputAssistAudio.set_stream(speech_assist_craft)
-			$InputAssistAudio.play()
-		elif Input.is_action_just_pressed("inventory_menu_examine"):
-			$InputAssistAudio.set_stream(speech_assist_examine)
-			$InputAssistAudio.play()
-		elif Input.is_action_just_pressed("menu_ui_cancel"):
-			$InputAssistAudio.set_stream(speech_assist_cancel)
-			$InputAssistAudio.play()
-		elif Input.is_action_just_pressed("inventory_menu_consume"):
-			$InputAssistAudio.set_stream(speech_assist_consume)
-			$InputAssistAudio.play()
+
+	if Input.is_action_just_pressed("menu_ui_right"):
+		pass
+	elif Input.is_action_just_pressed("menu_ui_left"):
+		pass
+	elif Input.is_action_just_pressed("menu_ui_repeat"):
+		pass
+	elif Input.is_action_just_pressed("inventory_menu_craft"):
+		$InputAssistAudio.set_stream(speech_assist_craft)
+		$InputAssistAudio.play()
+	elif Input.is_action_just_pressed("inventory_menu_examine"):
+		$InputAssistAudio.set_stream(speech_assist_examine)
+		$InputAssistAudio.play()
+	elif Input.is_action_just_pressed("menu_ui_cancel"):
+		$InputAssistAudio.set_stream(speech_assist_cancel)
+		$InputAssistAudio.play()
+	elif Input.is_action_just_pressed("inventory_menu_consume"):
+		$InputAssistAudio.set_stream(speech_assist_consume)
+		$InputAssistAudio.play()
 
 func examine_selected_item():
 	inventory_items[current_index].read_description()
 
 func get_craft_result(items_to_craft_indecies):
 	if items_to_craft_indecies:
-		var items_to_craft = []
-		
-		for item_index in items_to_craft_indecies:
-			items_to_craft.append(inventory_items[item_index].get_type())
-		items_to_craft.sort()
-		
+		var items_to_craft = get_items_to_craft(items_to_craft_indecies)
+
 		for craft_result in craft_mappings.keys():
 			for craft_mapping in craft_mappings[craft_result]:
 				print("craft mapping: " + str(craft_mapping))
@@ -206,6 +178,37 @@ func get_craft_result(items_to_craft_indecies):
 					return craft_result
 	return false
 
+func get_items_to_craft(items_to_craft_indecies):
+	var items_to_craft = []
+	for item_index in items_to_craft_indecies:
+		items_to_craft.append(inventory_items[item_index].get_type())
+	items_to_craft.sort()
+	return items_to_craft
+
+func get_items_to_craft_indecies():
+	var items_to_craft_indecies = []
+	var item_index = 0
+	while item_index < len(inventory_items):
+		if marked_for_craft[item_index]:
+			items_to_craft_indecies.append(item_index)
+		item_index = item_index + 1
+	return items_to_craft_indecies
+
+func issue_craft_failed_feedback():
+	if not $CraftFailedSound.is_playing():
+		$CraftFailedSound.play()
+
+func issue_craft_success_feedback():
+	if not $CraftSuccessSound.is_playing():
+		$CraftSuccessSound.play()
+
+func issue_selected_item_name_to_speech():
+	var name_to_speech = inventory_items[current_index].get_name_to_speech()
+	if $SpeechAudioPlayer.is_playing():
+		$SpeechAudioPlayer.stop()
+	$SpeechAudioPlayer.set_stream(name_to_speech)
+	$SpeechAudioPlayer.play()
+	
 func list_items_marked_for_craft():
 	var index = 0
 	if inventory_items:
@@ -223,33 +226,22 @@ func load_menu_end_alert_positions():
 func navigate_to_item(direction):
 	var end_reached = false
 	Input.stop_joy_vibration(0)
+	stop_all_audio()
 	if direction == "next":
 		if current_index == len(inventory_items) - 1 or len(inventory_items) == 0:
 			alert_right_end_reached()
 			end_reached = true
 		else:
-			inventory_items[0].stop_all_audio()
-			current_index = 0	
 			current_index = current_index + 1
 			$NavigateSound.play()
-		if len(inventory_items) > 1:
-			inventory_items[current_index-1].stop_all_audio()
-		if len(inventory_items) > 0:
-			inventory_items[current_index].stop_all_audio()
-
+		
 	elif direction == "previous":
 		if current_index == 0:
 			alert_left_end_reached()
 			end_reached = true
 		else:
-			inventory_items[len(inventory_items) - 1].stop_all_audio()
-			current_index = len(inventory_items) - 1
 			current_index = current_index - 1
 			$NavigateSound.play()
-			if len(inventory_items) > 1:
-				inventory_items[current_index+1].stop_all_audio()
-			if len(inventory_items) > 0:
-				inventory_items[current_index].stop_all_audio()
 				
 	current_item_selected(end_reached)
 
@@ -263,6 +255,27 @@ func on_WhisperDelayLeft_timeout():
 func on_WhisperDelayRight_timeout():
 	if current_index < len(inventory_items) - 1:
 		inventory_items[current_index+1].whisper_name_right()
+
+func remove_crafted_items_from_inventory():
+	var updated_inventory_items = []
+	var item_index = 0
+	while item_index < len(inventory_items):
+		if not marked_for_craft[item_index]:
+			updated_inventory_items.append(inventory_items[item_index])
+		item_index = item_index + 1
+	inventory_items = updated_inventory_items
+
+func set_whisper_delay_left(delay):
+	$WhisperDelayLeft.wait_time = delay
+	
+func set_whisper_delay_right(delay):
+	$WhisperDelayRight.wait_time = delay
+
+func stop_all_audio():
+	$SpeechAudioQueue.stop_and_clear()
+	$SFXAudioQueue.stop_and_clear()
+	$WhisperLeftAudioPlayer.stop()
+	$WhisperRightAudioPlayer.stop()
 
 func toggle_current_item_craft_mark():
 	if not $InitiateCraftAlert.is_playing():

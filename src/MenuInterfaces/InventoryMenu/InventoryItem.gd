@@ -22,71 +22,40 @@ func consume():
 	if not $ConsumeSound.is_playing():
 		$ConsumeSound.play()
 
-func deselect():
-	stop_all_audio()
+func get_consume_sound():
+	return consume_sound
+
+func get_description_to_speech():
+	return description_to_speech
+
+func get_identity_sound():
+	return identity_sound
+
+func get_name_to_speech():
+	return name_to_speech
 	
 func get_type():
 	return type
 
-func load_type_audio():
-	if type:
-		pass
+func set_consume_sound(arg_consume_sound):
+	consume_sound = arg_consume_sound
 
-func issue_audio_id():
-	$IdentitySound.play()
+func set_description_to_speech(arg_description_to_speech):
+	description_to_speech = arg_description_to_speech
 
-func read_description():
-	if not $DescriptionToSpeech.is_playing():
-		$DescriptionToSpeech.play()
-	
-func select():
-	$NameToSpeech.set_bus('Master')
-	$WhisperDelayLeft.start()
-	$WhisperDelayRight.start()
-	issue_audio_id()
-	speak_name()
+func set_identity_sound(arg_identity_sound):
+	identity_sound = arg_identity_sound
 
-func set_audio_id(audio_id):
-	$IdentitySound.set_stream(audio_id)
-
-func set_description_to_speech(description_to_speech):
-	$DescriptionToSpeech.set_stream(description_to_speech)
-
-func set_name_to_speech(name_to_speech):
-	$NameToSpeech.set_stream(name_to_speech)
+func set_name_to_speech(arg_name_to_speech):
+	name_to_speech = arg_name_to_speech
 	
 func set_type(arg_type="empty"):
 	self.type = arg_type
 	
-func set_whisper_delay_left(delay):
-	$WhisperDelayLeft.wait_time = delay
-	
-func set_whisper_delay_right(delay):
-	$WhisperDelayRight.wait_time = delay
-
-func speak_name():
-	if not $NameToSpeech.is_playing():
-		$NameToSpeech.play()
-
-func stop_all_audio():
-	if $ConsumeSound.is_playing():
-		$ConsumeSound.stop()
-	if $DescriptionToSpeech.is_playing():
-		$DescriptionToSpeech.stop()
-	if $IdentitySound.is_playing():
-		$IdentitySound.stop()
-	if $NameToSpeech.is_playing():
-		$NameToSpeech.stop()
-
-func whisper_name_left():
-	print($NameToSpeech.get_bus())
+func whisper_name_left():	
 	$NameToSpeech.set_bus("L_UI_Whisper")
-	print($NameToSpeech.get_bus())
-	speak_name()
-	#$NameToSpeech.bus = 'Master'
 
 func whisper_name_right():
 	$NameToSpeech.set_bus("R_UI_Whisper")
-	speak_name()
-	#$NameToSpeech.bus = 'Master'
+	
 	
