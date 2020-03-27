@@ -45,8 +45,10 @@ volume_db = 1.0
 pitch_scale = 0.9
 
 [node name="WhisperDelayLeft" type="Timer" parent="."]
+one_shot = true
 
 [node name="WhisperDelayRight" type="Timer" parent="."]
+one_shot = true
 
 [node name="SpeechAudioQueue" parent="." instance=ExtResource( 7 )]
 
