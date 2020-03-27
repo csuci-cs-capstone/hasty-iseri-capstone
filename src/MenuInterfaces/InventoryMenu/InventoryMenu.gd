@@ -61,14 +61,6 @@ func _process(_delta):
 			consume_selected_item()
 		elif Input.is_action_just_pressed("inventory_menu_confirm_craft"):
 			attempt_craft_with_marked_items()
-	
-	if whisper_delay_left_timer_active:
-		$WhisperLeftAudioPlayer.play()
-		whisper_delay_left_timer_active = false
-		
-	if whisper_delay_right_timer_active:
-		$WhisperRightAudioPlayer.play()
-		whisper_delay_right_timer_active = false
 
 # TODO: determine how to migrate this method to the Inventory scene
 func add_inventory_item(type):
@@ -118,14 +110,15 @@ func consume_selected_item():
 
 func current_item_selected(end_reached=false):
 	if len(inventory_items) > 0:
-		issue_item_name_to_speech(inventory_items[current_index])
+		$WhisperAudioPlayerQueue.add_primary_stream(inventory_items[current_index].get_name_to_speech())
 		if len(inventory_items) > 1:
 			if current_index > 0:
-				queue_whisper_left_stream(inventory_items[current_index])
-				init_whisper_delay_left_timer(DEBUG_WHISPER_DELAY_LEFT)
+				$WhisperAudioPlayerQueue.add_whisper_left_stream(inventory_items[current_index].get_name_to_speech(), 
+						DEBUG_WHISPER_DELAY_LEFT)
 			if current_index < len(inventory_items) - 1:
-				queue_whisper_right_stream(inventory_items[current_index+1])
-				init_whisper_delay_right_timer(DEBUG_WHISPER_DELAY_RIGHT)
+				$WhisperAudioPlayerQueue.add_whisper_left_stream(inventory_items[current_index+1].get_name_to_speech(), 
+						DEBUG_WHISPER_DELAY_RIGHT)
+		$WhisperAudioPlayerQueue.commit()
 		if marked_for_craft[current_index] and not end_reached:
 			alert_marked_for_craft()
 		
@@ -212,14 +205,6 @@ func get_items_to_craft_indecies():
 		item_index = item_index + 1
 	return items_to_craft_indecies
 
-func init_whisper_delay_left_timer(delay):
-	$WhisperDelayLeft.wait_time = delay
-	$WhisperDelayLeft.start()
-	
-func init_whisper_delay_right_timer(delay):
-	$WhisperDelayRight.wait_time = delay
-	$WhisperDelayRight.start()
-
 func issue_craft_failed_feedback():
 	if not $CraftFailedSound.is_playing():
 		$CraftFailedSound.play()
@@ -227,27 +212,6 @@ func issue_craft_failed_feedback():
 func issue_craft_success_feedback():
 	if not $CraftSuccessSound.is_playing():
 		$CraftSuccessSound.play()
-
-func issue_item_name_to_speech(item):
-	var name_to_speech = item.get_name_to_speech()
-	if $SpeechAudioPlayer.is_playing():
-		$SpeechAudioPlayer.stop()
-	$SpeechAudioPlayer.set_stream(name_to_speech)
-	$SpeechAudioPlayer.play()
-	
-func whisper_left_item_name_to_speech(item):
-	var name_to_speech = item.get_name_to_speech()
-	if $WhisperLeftAudioPlayer.is_playing():
-		$WhisperLeftAudioPlayer.stop()
-	$WhisperLeftAudioPlayer.set_stream(name_to_speech)
-	$WhisperLeftAudioPlayer.play()
-
-func whisper_right_item_name_to_speech(item):
-	var name_to_speech = item.get_name_to_speech()
-	if $WhisperRightAudioPlayer.is_playing():
-		$WhisperRightAudioPlayer.stop()
-	$WhisperRightAudioPlayer.set_stream(name_to_speech)
-	$WhisperRightAudioPlayer.play()
 
 func list_items_marked_for_craft():
 	var index = 0
@@ -318,10 +282,7 @@ func set_whisper_delay_right(delay):
 	$WhisperDelayRight.wait_time = delay
 
 func stop_all_audio():
-	$SpeechAudioQueue.stop_and_clear()
-	$SFXAudioQueue.stop_and_clear()
-	$WhisperLeftAudioPlayer.stop()
-	$WhisperRightAudioPlayer.stop()
+	$WhisperAudioPlayerQueue.stop_and_clear()
 
 func toggle_current_item_craft_mark():
 	if not $InitiateCraftAlert.is_playing():

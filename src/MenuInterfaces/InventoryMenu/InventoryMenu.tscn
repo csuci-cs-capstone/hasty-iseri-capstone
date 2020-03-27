@@ -6,7 +6,7 @@
 [ext_resource path="res://src/MenuInterfaces/InventoryMenu/speech_craft.wav" type="AudioStream" id=4]
 [ext_resource path="res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav" type="AudioStream" id=5]
 [ext_resource path="res://src/MenuInterfaces/InventoryMenu/441812__fst180081__180081-hammer-on-anvil-01.wav" type="AudioStream" id=6]
-[ext_resource path="res://src/SingleAudioPlayerQueue.tscn" type="PackedScene" id=7]
+[ext_resource path="res://src/WhisperAudioPlayerQueue.tscn" type="PackedScene" id=8]
 
 [node name="InventoryMenu" type="Control"]
 anchor_right = 1.0
@@ -44,20 +44,6 @@ stream = ExtResource( 5 )
 volume_db = 1.0
 pitch_scale = 0.9
 
-[node name="WhisperDelayLeft" type="Timer" parent="."]
-one_shot = true
-
-[node name="WhisperDelayRight" type="Timer" parent="."]
-one_shot = true
-
-[node name="SpeechAudioQueue" parent="." instance=ExtResource( 7 )]
-
-[node name="SFXAudioQueue" parent="." instance=ExtResource( 7 )]
-
 [node name="SpeechAudioPlayer" type="AudioStreamPlayer" parent="."]
 
-[node name="WhisperLeftAudioPlayer" type="AudioStreamPlayer" parent="."]
-bus = "L_UI_Whisper"
-
-[node name="WhisperRightAudioPlayer" type="AudioStreamPlayer" parent="."]
-bus = "R_UI_Whisper"
+[node name="WhisperAudioPlayerQueue" parent="." instance=ExtResource( 8 )]

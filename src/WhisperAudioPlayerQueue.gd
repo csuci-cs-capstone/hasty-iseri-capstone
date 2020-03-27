@@ -13,8 +13,12 @@ var whisper_delay_right_timer_active
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	current_stream_complete = true
+	whisper_delay_left_timer_active = false
+	whisper_delay_right_timer_active = false
 	next_stream_data = get_default_stream_data()
 	$PrimaryAudioStreamPlayer.connect("finished",self,"on_PrimaryAudioStreamPlayer_finished")
+	$WhisperDelayLeft.connect("timeout",self,"on_WhisperDelayLeft_timeout")
+	$WhisperDelayRight.connect("timeout",self,"on_WhisperDelayRight_timeout")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -26,13 +30,11 @@ func _process(delta):
 			$PrimaryAudioStreamPlayer.play()
 			if stream_queue[0]["whisper_left"]:
 				$WhisperLeftAudioPlayer.set_stream(stream_queue[0]["whisper_left"])
-				$WhisperLeftAudioPlayer.play()
 				$WhisperDelayLeft.wait_time = stream_queue[0]["delay_left"]
 				$WhisperDelayLeft.start()
 				whisper_delay_left_timer_active = true
 			if stream_queue[0]["whisper_right"]:
 				$WhisperRightAudioPlayer.set_stream(stream_queue[0]["whisper_right"])
-				$WhisperRightAudioPlayer.play()
 				$WhisperDelayRight.wait_time = stream_queue[0]["delay_right"]
 				$WhisperDelayRight.start()
 				whisper_delay_right_timer_active = true
@@ -46,8 +48,9 @@ func _process(delta):
 			$WhisperRightAudioPlayer.play()
 			whisper_delay_right_timer_active = false
 
-func add_primary_stream(stream):
+func add_primary_stream(stream, bus="master"):
 	next_stream_data["stream"] = stream
+	next_stream_data["bus"] = bus
 
 func add_whisper_left_stream(stream, delay=0):
 	next_stream_data["whisper_left"] = stream
@@ -57,7 +60,7 @@ func add_whisper_right_stream(stream, delay=0):
 	next_stream_data["whisper_right"] = stream
 	next_stream_data["delay_right"] = delay
 
-func commit_to_queue():
+func commit():
 	if "stream" in next_stream_data.keys():
 		stream_queue.append(next_stream_data)
 	else:
@@ -68,6 +71,7 @@ func get_default_stream_data():
 	default_stream_data["stream"] = false
 	default_stream_data["whisper_left"] = false
 	default_stream_data["whisper_right"] = false
+	default_stream_data["bus"] = "master"
 	default_stream_data["delay_left"] = 0
 	default_stream_data["delay_right"] = 0
 	return default_stream_data
@@ -82,12 +86,24 @@ func init_whisper_delay_right_timer(delay):
 
 func on_PrimaryAudioStreamPlayer_finished():
 	current_stream_complete = true
-	
+
+func on_WhisperDelayLeft_timeout():
+	$WhisperLeftAudioPlayer.play()
+	whisper_delay_left_timer_active = false
+
+func on_WhisperDelayRight_timeout():
+	$WhisperRightAudioPlayer.play()
+	whisper_delay_right_timer_active = false
+
 func reset_stage():
 	next_stream_data = get_default_stream_data()
 
 func stop_and_clear():
-	if $AudioStreamPlayer.is_playing():
-		$AudioStreamPlayer.stop()
+	if $PrimaryAudioStreamPlayer.is_playing():
+		$PrimaryAudioStreamPlayer.stop()
+	if $WhisperLeftAudioPlayer.is_playing():
+		$WhisperLeftAudioPlayer.stop()
+	if $WhisperRightAudioPlayer.is_playing():
+		$WhisperRightAudioPlayer.stop()
 	stream_queue = []
 	
