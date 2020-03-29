@@ -2,6 +2,13 @@
   "artifacts": [],
   "obstacles": [],
   "resources": {
+      "null":{
+          "name": null,
+          "description": null,
+          "identity_sound": null,
+          "consumption_sound": null,
+          "craft_mappings": []
+      },
       "blue": {
           "name": "speech_blue.wav",
           "description": "speech_blue_description.wav",

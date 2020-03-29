@@ -6,12 +6,15 @@ extends Control
 var current_index
 var inventory_items = []
 var marked_for_craft = []
+var max_capacity = 8 # TODO: this value should be loaded from the Inventory scene system
 
 var audio_craft_success_sound = load("res://src/MenuInterfaces/InventoryMenu/441812__fst180081__180081-hammer-on-anvil-01.wav")
 var audio_craft_failed_sound = load("res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
 var audio_close_craft_alert = load("res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
-var audio_navigate_sound = load("res://src/MenuInterfaces/213148__complex-waveform__click.wav")
+var audio_free_space = load("res://src/MenuInterfaces/InventoryMenu/411221__andersholm__rustling-of-chips-bag.wav")
 var audio_mark_for_craft = load("res://src/MenuInterfaces/InventoryMenu/418850__kierankeegan__rachet-click.wav")
+var audio_navigate_sound = load("res://src/MenuInterfaces/213148__complex-waveform__click.wav")
+var audio_occupied_space = load("res://src/MenuInterfaces/InventoryMenu/TylerHasty_key01.wav")
 var audio_unmark_for_craft = load("res://src/MenuInterfaces/419494__plasterbrain__high-tech-ui-cancel.wav")
 
 var speech_assist_examine = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_examine.wav")
@@ -19,12 +22,16 @@ var speech_assist_consume = load("res://src/MenuInterfaces/InventoryMenu/speech_
 var speech_assist_craft = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_craft.wav")
 var speech_assist_cancel = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_cancel.wav")
 var speech_assist_cancel_craft = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_cancel_craft_1.wav")
+var speech_free_spaces = load("res://src/MenuInterfaces/InventoryMenu/speech_free_spaces.wav")
+var speech_marked_for_craft = load("res://src/MenuInterfaces/InventoryMenu/speech_marked_for_craft.wav")
+var speech_none = load("res://src/MenuInterfaces/InventoryMenu/speech_none.wav")
+var speech_occupied_spaces = load("res://src/MenuInterfaces/InventoryMenu/speech_occupied_spaces.wav")
 
 # DEBUG
 var craft_mappings = {}
 var gameworld_object_definitions
 var InventoryItem
-const DEBUG_WHISPER_VOLUME = -35
+const DEBUG_WHISPER_VOLUME = -33
 const DEBUG_WHISPER_DELAY_LEFT = .22
 const DEBUG_WHISPER_DELAY_RIGHT = .32
 
@@ -33,12 +40,11 @@ var whisper_delay_right_timer_active = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-
 	InventoryItem = load("res://src/MenuInterfaces/InventoryMenu/InventoryItem.tscn")
 	current_index = 0
 	debug_configure_audio_bus()
 	debug_load_item_definitions()
-	debug_load_name_to_speech()
+	debug_load_inventory_items()
 	current_item_selected()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -47,19 +53,29 @@ func _process(_delta):
 		describe_input_option_to_user()
 	else:
 		if Input.is_action_just_pressed("menu_ui_right"):
+			stop_all_audio()
 			navigate_to_item("next")
 		elif Input.is_action_just_pressed("menu_ui_left"):
+			stop_all_audio()
 			navigate_to_item("previous")
 		elif Input.is_action_just_pressed("menu_ui_repeat"):
+			stop_all_audio()
 			current_item_selected()
 		elif Input.is_action_just_pressed("inventory_menu_craft"):
+			stop_all_audio()
 			toggle_current_item_craft_mark()
 		elif Input.is_action_just_pressed("inventory_menu_examine"):
+			stop_all_audio()
 			examine_selected_item()
 		elif Input.is_action_just_pressed("inventory_menu_consume"):
+			stop_all_audio()
 			consume_selected_item()
 		elif Input.is_action_just_pressed("inventory_menu_confirm_craft"):
+			stop_all_audio()
 			attempt_craft_with_marked_items()
+		elif Input.is_action_just_pressed("inventory_menu_get_status"):
+			stop_all_audio()
+			read_status()
 
 # TODO: determine how to migrate this method to the Inventory scene
 func add_inventory_item(type):
@@ -148,7 +164,7 @@ func debug_load_item_definitions():
 		craft_mappings[resource_type] = gameworld_object_definitions["resources"][resource_type]["craft_mappings"]
 
 #DEBUG
-func debug_load_name_to_speech():
+func debug_load_inventory_items():
 	var types = ["blue", "green", "red"]
 	for type in types:
 		add_inventory_item(type)
@@ -215,15 +231,54 @@ func issue_craft_failed_feedback():
 func issue_craft_success_feedback():
 	$SimpleSFXQueue.add(audio_craft_success_sound)
 
+func list_free_spaces():
+	var index = 0
+	var number_of_free_spaces = max_capacity - len(inventory_items)
+	$WhisperAudioPlayerQueue.add_primary_stream(speech_free_spaces)
+	$WhisperAudioPlayerQueue.commit()
+	if number_of_free_spaces > 0:
+		while index < number_of_free_spaces:
+			$WhisperAudioPlayerQueue.add_primary_stream(audio_free_space)
+			$WhisperAudioPlayerQueue.commit()
+			index = index + 1
+	else:
+		$WhisperAudioPlayerQueue.add_primary_stream(speech_none)
+		$WhisperAudioPlayerQueue.commit()
+			
 func list_items_marked_for_craft():
 	var index = 0
-	if inventory_items:
+	var items_marked_for_craft = false
+	
+	for item in marked_for_craft:
+		if item:
+			items_marked_for_craft
+			break
+			
+	$WhisperAudioPlayerQueue.add_primary_stream(speech_marked_for_craft)
+	$WhisperAudioPlayerQueue.commit()
+	
+	if items_marked_for_craft:
 		while index < len(inventory_items):
 			if marked_for_craft[index]:
-				while inventory_items[index].get_node("NameToSpeech").is_playing():
-					pass
-				inventory_items[index].speak_name()
+				$WhisperAudioPlayerQueue.add_primary_stream(inventory_items[index].get_name_to_speech())
+				$WhisperAudioPlayerQueue.commit()
 			index = index + 1
+	else:
+		$WhisperAudioPlayerQueue.add_primary_stream(speech_none)
+		$WhisperAudioPlayerQueue.commit()
+
+func list_occupied_spaces():
+	var index = 0
+	$WhisperAudioPlayerQueue.add_primary_stream(speech_occupied_spaces)
+	$WhisperAudioPlayerQueue.commit()
+	if len(inventory_items) > 0:
+		while index < len(inventory_items):
+			$WhisperAudioPlayerQueue.add_primary_stream(audio_occupied_space)
+			$WhisperAudioPlayerQueue.commit()
+			index = index + 1
+	else:
+		$WhisperAudioPlayerQueue.add_primary_stream(speech_none)
+		$WhisperAudioPlayerQueue.commit()
 
 func load_menu_end_alert_positions():
 	# TODO: use screen resolution to position 2D Audio alert nodes for reaching menu end
@@ -260,6 +315,17 @@ func on_WhisperDelayRight_timeout():
 	if current_index < len(inventory_items) - 1:
 		inventory_items[current_index+1].whisper_name_right()
 
+func queue_whisper_left_stream(stream):
+	$WhisperLeftAudioPlayer.set_stream(stream)
+
+func queue_whisper_right_stream(stream):
+	$WhisperRightAudioPlayer.set_stream(stream)
+
+func read_status():
+	list_occupied_spaces()
+	list_free_spaces()
+	list_items_marked_for_craft()
+
 func remove_crafted_items_from_inventory():
 	var updated_inventory_items = []
 	var item_index = 0
@@ -269,12 +335,6 @@ func remove_crafted_items_from_inventory():
 		item_index = item_index + 1
 	inventory_items = updated_inventory_items
 
-func queue_whisper_left_stream(stream):
-	$WhisperLeftAudioPlayer.set_stream(stream)
-
-func queue_whisper_right_stream(stream):
-	$WhisperRightAudioPlayer.set_stream(stream)
-
 func set_whisper_delay_left(delay):
 	$WhisperDelayLeft.wait_time = delay
 	
@@ -283,6 +343,7 @@ func set_whisper_delay_right(delay):
 
 func stop_all_audio():
 	$WhisperAudioPlayerQueue.stop_and_clear()
+	$SimpleSFXQueue.stop_and_clear()
 
 func toggle_current_item_craft_mark():
 	var audio_alert = false

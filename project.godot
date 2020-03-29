@@ -112,3 +112,8 @@ map_menu_snap_to_waypoint={
 "events": [ Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":2,"pressure":0.0,"pressed":false,"script":null)
  ]
 }
+inventory_menu_get_status={
+"deadzone": 0.5,
+"events": [ Object(InputEventJoypadButton,"resource_local_to_scene":false,"resource_name":"","device":0,"button_index":4,"pressure":0.0,"pressed":false,"script":null)
+ ]
+}
