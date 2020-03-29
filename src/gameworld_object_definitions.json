@@ -48,6 +48,15 @@
           "craft_mappings": [
             ["red", "green"]
           ]
+      },
+      "apple": {
+          "name": "speech_yellow.wav",
+          "description": "speech_yellow_description.wav",
+          "identity_sound": "",
+          "consumption_sound": "",
+          "craft_mappings": [
+            ["red", "green"]
+          ]
       }
-  }
+    }
 }

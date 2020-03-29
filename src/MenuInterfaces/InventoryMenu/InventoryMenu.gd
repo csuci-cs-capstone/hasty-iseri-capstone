@@ -11,6 +11,8 @@ var audio_craft_success_sound = load("res://src/MenuInterfaces/InventoryMenu/441
 var audio_craft_failed_sound = load("res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
 var audio_close_craft_alert = load("res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
 var audio_navigate_sound = load("res://src/MenuInterfaces/213148__complex-waveform__click.wav")
+var audio_mark_for_craft = load("res://src/MenuInterfaces/InventoryMenu/418850__kierankeegan__rachet-click.wav")
+var audio_unmark_for_craft = load("res://src/MenuInterfaces/419494__plasterbrain__high-tech-ui-cancel.wav")
 
 var speech_assist_examine = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_examine.wav")
 var speech_assist_consume = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_consume.wav")
@@ -76,7 +78,7 @@ func alert_left_end_reached():
 		$AlertLeftEndReached.play()
 		Input.start_joy_vibration (0, 0, .8, .2)
 		
-func alert_marked_for_craft():
+func alert_is_marked_for_craft():
 	Input.start_joy_vibration (0, 1, 0, .08)
 	
 func alert_right_end_reached():
@@ -92,6 +94,8 @@ func attempt_craft_with_marked_items():
 		issue_craft_success_feedback()
 		remove_crafted_items_from_inventory()
 		add_inventory_item(craft_result)
+		current_index= max(len(inventory_items) - 1, 0)
+		current_item_selected()
 	else:
 		issue_craft_failed_feedback()
 			
@@ -117,7 +121,7 @@ func current_item_selected(end_reached=false):
 						DEBUG_WHISPER_DELAY_RIGHT)
 		$WhisperAudioPlayerQueue.commit()
 		if marked_for_craft[current_index] and not end_reached:
-			alert_marked_for_craft()
+			alert_is_marked_for_craft()
 		
 #DEBUG
 func debug_configure_audio_bus():
@@ -206,12 +210,10 @@ func get_items_to_craft_indecies():
 	return items_to_craft_indecies
 
 func issue_craft_failed_feedback():
-	if not $CraftFailedSound.is_playing():
-		$CraftFailedSound.play()
+	$SimpleSFXQueue.add(audio_craft_failed_sound)
 
 func issue_craft_success_feedback():
-	if not $CraftSuccessSound.is_playing():
-		$CraftSuccessSound.play()
+	$SimpleSFXQueue.add(audio_craft_success_sound)
 
 func list_items_marked_for_craft():
 	var index = 0
@@ -233,7 +235,7 @@ func navigate_to_item(direction):
 	Input.stop_joy_vibration(0)
 	stop_all_audio()
 	if direction == "next":
-		if current_index == len(inventory_items) - 1 or len(inventory_items) == 0:
+		if current_index == max(len(inventory_items) - 1, 0):
 			alert_right_end_reached()
 			end_reached = true
 		else:
@@ -283,8 +285,19 @@ func stop_all_audio():
 	$WhisperAudioPlayerQueue.stop_and_clear()
 
 func toggle_current_item_craft_mark():
-	if not $InitiateCraftAlert.is_playing():
-		$InitiateCraftAlert.play()
+	var audio_alert = false
+	if not marked_for_craft[current_index]:
+		$SimpleSFXQueue.add(audio_mark_for_craft)
+		#$WhisperAudioPlayerQueue.add_primary_stream(audio_mark_for_craft)
+		#$WhisperAudioPlayerQueue.commit()
+		alert_is_marked_for_craft()
+	else:
+		$SimpleSFXQueue.add(audio_unmark_for_craft)
+		#$WhisperAudioPlayerQueue.add_primary_stream(audio_unmark_for_craft)
+		#$WhisperAudioPlayerQueue.commit()
+
+	$WhisperAudioPlayerQueue.add_primary_stream(inventory_items[current_index].get_name_to_speech())
+	$WhisperAudioPlayerQueue.commit()
 	marked_for_craft[current_index] = not marked_for_craft[current_index]
-	alert_marked_for_craft()
+
 	

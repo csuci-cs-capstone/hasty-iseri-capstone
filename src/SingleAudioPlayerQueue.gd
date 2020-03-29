@@ -15,13 +15,15 @@ func _process(delta):
 	if len(stream_queue) > 0 and not $AudioStreamPlayer.is_playing():
 		$AudioStreamPlayer.set_stream(stream_queue[0]["stream"])
 		$AudioStreamPlayer.set_bus(stream_queue[0]["bus"])
-		if stream_queue[0]["stream2"]:
-			$AudioStreamPlayer2.set_stream(stream_queue[0]["stream2"])
-			$AudioStreamPlayer2.set_bus(stream_queue[0]["bus"])
-			$AudioStreamPlayer2.play()
 		$AudioStreamPlayer.play()
 		stream_queue.pop_front()
 	
-func add_to_queue(stream, stream2 = null, bus = "master"):
-	var stream_data = {"stream": stream, "stream2": stream2, "bus": bus}
+func add(stream, bus = "master"):
+	var stream_data = {"stream": stream, "bus": bus}
 	stream_queue.append(stream_data)
+
+func stop_and_clear():
+	if $AudioStreamPlayer.is_playing():
+		$AudioStreamPlayer.stop()
+	stream_queue = []
+
