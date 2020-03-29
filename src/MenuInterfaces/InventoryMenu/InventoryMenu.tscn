@@ -1,7 +1,6 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://src/MenuInterfaces/InventoryMenu/InventoryMenu.gd" type="Script" id=1]
-[ext_resource path="res://src/MenuInterfaces/213148__complex-waveform__click.wav" type="AudioStream" id=2]
 [ext_resource path="res://442161__isteak__enter-button-low-robotic.wav" type="AudioStream" id=3]
 [ext_resource path="res://src/MenuInterfaces/InventoryMenu/speech_craft.wav" type="AudioStream" id=4]
 [ext_resource path="res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav" type="AudioStream" id=5]
@@ -27,9 +26,6 @@ stream = ExtResource( 3 )
 volume_db = 2.0
 
 [node name="InputAssistAudio" type="AudioStreamPlayer" parent="."]
-
-[node name="NavigateSound" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 2 )
 
 [node name="InitiateCraftAlert" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )

@@ -7,12 +7,10 @@ var current_index
 var inventory_items = []
 var marked_for_craft = []
 
-var whisper_delay_timer_left
-var whisper_delay_timer_right
-
 var audio_craft_success_sound = load("res://src/MenuInterfaces/InventoryMenu/441812__fst180081__180081-hammer-on-anvil-01.wav")
 var audio_craft_failed_sound = load("res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
 var audio_close_craft_alert = load("res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
+var audio_navigate_sound = load("res://src/MenuInterfaces/213148__complex-waveform__click.wav")
 
 var speech_assist_examine = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_examine.wav")
 var speech_assist_consume = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_consume.wav")
@@ -39,7 +37,6 @@ func _ready():
 	debug_configure_audio_bus()
 	debug_load_item_definitions()
 	debug_load_name_to_speech()
-	$NavigateSound.connect("finished",self,"on_NavigateSound_finished")
 	current_item_selected()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -113,10 +110,10 @@ func current_item_selected(end_reached=false):
 		$WhisperAudioPlayerQueue.add_primary_stream(inventory_items[current_index].get_name_to_speech())
 		if len(inventory_items) > 1:
 			if current_index > 0:
-				$WhisperAudioPlayerQueue.add_whisper_left_stream(inventory_items[current_index].get_name_to_speech(), 
+				$WhisperAudioPlayerQueue.add_whisper_left_stream(inventory_items[current_index-1].get_name_to_speech(), 
 						DEBUG_WHISPER_DELAY_LEFT)
 			if current_index < len(inventory_items) - 1:
-				$WhisperAudioPlayerQueue.add_whisper_left_stream(inventory_items[current_index+1].get_name_to_speech(), 
+				$WhisperAudioPlayerQueue.add_whisper_right_stream(inventory_items[current_index+1].get_name_to_speech(), 
 						DEBUG_WHISPER_DELAY_RIGHT)
 		$WhisperAudioPlayerQueue.commit()
 		if marked_for_craft[current_index] and not end_reached:
@@ -175,7 +172,10 @@ func describe_input_option_to_user():
 		$InputAssistAudio.play()
 
 func examine_selected_item():
-	inventory_items[current_index].read_description()
+	$WhisperAudioPlayerQueue.add_primary_stream(inventory_items[current_index].get_name_to_speech())
+	$WhisperAudioPlayerQueue.commit()
+	$WhisperAudioPlayerQueue.add_primary_stream(inventory_items[current_index].get_description_to_speech())
+	$WhisperAudioPlayerQueue.commit()
 
 func get_craft_result(items_to_craft_indecies):
 	if items_to_craft_indecies:
@@ -229,6 +229,7 @@ func load_menu_end_alert_positions():
 
 func navigate_to_item(direction):
 	var end_reached = false
+	var add_val = 0
 	Input.stop_joy_vibration(0)
 	stop_all_audio()
 	if direction == "next":
@@ -236,21 +237,18 @@ func navigate_to_item(direction):
 			alert_right_end_reached()
 			end_reached = true
 		else:
-			current_index = current_index + 1
-			$NavigateSound.play()
-		
+			add_val = 1
 	elif direction == "previous":
 		if current_index == 0:
 			alert_left_end_reached()
 			end_reached = true
 		else:
-			current_index = current_index - 1
-			$NavigateSound.play()
-				
+			add_val = -1
+			
+	current_index = current_index + add_val
+	$WhisperAudioPlayerQueue.add_primary_stream(audio_navigate_sound)
+	$WhisperAudioPlayerQueue.commit()
 	current_item_selected(end_reached)
-
-func on_NavigateSound_finished():
-	current_item_selected()
 
 func on_WhisperDelayLeft_timeout():	
 	if current_index > 0:
