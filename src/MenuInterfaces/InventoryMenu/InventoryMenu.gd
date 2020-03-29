@@ -251,9 +251,9 @@ func list_items_marked_for_craft():
 	
 	for item in marked_for_craft:
 		if item:
-			items_marked_for_craft
+			items_marked_for_craft = true
 			break
-			
+
 	$WhisperAudioPlayerQueue.add_primary_stream(speech_marked_for_craft)
 	$WhisperAudioPlayerQueue.commit()
 	
@@ -303,8 +303,9 @@ func navigate_to_item(direction):
 			add_val = -1
 			
 	current_index = current_index + add_val
-	$WhisperAudioPlayerQueue.add_primary_stream(audio_navigate_sound)
-	$WhisperAudioPlayerQueue.commit()
+	if len(inventory_items) > 1:
+		$WhisperAudioPlayerQueue.add_primary_stream(audio_navigate_sound)
+		$WhisperAudioPlayerQueue.commit()
 	current_item_selected(end_reached)
 
 func on_WhisperDelayLeft_timeout():	
@@ -344,6 +345,10 @@ func set_whisper_delay_right(delay):
 func stop_all_audio():
 	$WhisperAudioPlayerQueue.stop_and_clear()
 	$SimpleSFXQueue.stop_and_clear()
+
+func stop_all_feedback():
+	stop_all_audio()
+	Input.stop_joy_vibration(0)
 
 func toggle_current_item_craft_mark():
 	var audio_alert = false
