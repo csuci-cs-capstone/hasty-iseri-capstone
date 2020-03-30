@@ -1,0 +1,20 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://src/WhisperAudioPlayerQueue.gd" type="Script" id=1]
+
+[node name="WhisperAudioPlayerQueue" type="Node"]
+script = ExtResource( 1 )
+
+[node name="PrimaryAudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="WhisperLeftAudioPlayer" type="AudioStreamPlayer" parent="."]
+bus = "L_UI_Whisper"
+
+[node name="WhisperRightAudioPlayer" type="AudioStreamPlayer" parent="."]
+bus = "R_UI_Whisper"
+
+[node name="WhisperDelayLeft" type="Timer" parent="."]
+one_shot = true
+
+[node name="WhisperDelayRight" type="Timer" parent="."]
+one_shot = true

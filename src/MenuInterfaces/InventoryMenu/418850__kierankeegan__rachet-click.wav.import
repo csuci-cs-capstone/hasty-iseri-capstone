@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/418850__kierankeegan__rachet-click.wav-d73e99f3d228114946a2bce201717ff6.sample"
+
+[deps]
+
+source_file="res://src/MenuInterfaces/InventoryMenu/418850__kierankeegan__rachet-click.wav"
+dest_files=[ "res://.import/418850__kierankeegan__rachet-click.wav-d73e99f3d228114946a2bce201717ff6.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
