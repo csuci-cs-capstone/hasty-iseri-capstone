@@ -19,8 +19,7 @@ func _ready():
 #	pass
 	
 func consume():
-	if not $ConsumeSound.is_playing():
-		$ConsumeSound.play()
+	pass
 
 func get_consume_sound():
 	return consume_sound
@@ -51,11 +50,4 @@ func set_name_to_speech(arg_name_to_speech):
 	
 func set_type(arg_type="empty"):
 	self.type = arg_type
-	
-func whisper_name_left():	
-	$NameToSpeech.set_bus("L_UI_Whisper")
 
-func whisper_name_right():
-	$NameToSpeech.set_bus("R_UI_Whisper")
-	
-	
