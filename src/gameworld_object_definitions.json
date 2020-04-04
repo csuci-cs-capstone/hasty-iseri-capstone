@@ -7,6 +7,7 @@
           "description": null,
           "identity_sound": null,
           "consumption_sound": null,
+          "consumption_value": null,
           "craft_mappings": []
       },
       "blue": {
@@ -61,6 +62,7 @@
           "description": "speech_yellow_description.wav",
           "identity_sound": "",
           "consumption_sound": "",
+          "consumption_value": 1,
           "craft_mappings": [
             ["red", "green"]
           ]

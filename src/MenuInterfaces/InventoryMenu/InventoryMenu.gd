@@ -1,10 +1,7 @@
 extends Control
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 var current_index
-var inventory_items = []
+var inventory
 var marked_for_craft = []
 var max_capacity = 8 # TODO: this value should be loaded from the Inventory scene system
 
@@ -34,6 +31,7 @@ var InventoryItem
 const DEBUG_WHISPER_VOLUME = -33
 const DEBUG_WHISPER_DELAY_LEFT = .22
 const DEBUG_WHISPER_DELAY_RIGHT = .32
+const DEBUG_SIMULTANEOUS_MARK_FOR_CRAFT_FEEDBACK = true
 
 var whisper_delay_left_timer_active = false
 var whisper_delay_right_timer_active = false
@@ -43,8 +41,6 @@ func _ready():
 	InventoryItem = load("res://src/MenuInterfaces/InventoryMenu/InventoryItem.tscn")
 	current_index = 0
 	debug_configure_audio_bus()
-	debug_load_item_definitions()
-	debug_load_inventory_items()
 	current_item_selected()
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -77,18 +73,6 @@ func _process(_delta):
 			stop_all_audio()
 			read_status()
 
-# TODO: determine how to migrate this method to the Inventory scene
-func add_inventory_item(type):
-	var item_definition = gameworld_object_definitions["resources"][type]
-	var pwd_path = "res://src/MenuInterfaces/InventoryMenu/"
-	inventory_items.append(InventoryItem.instance())
-	var current_capacity = len(inventory_items)
-	add_child(inventory_items[current_capacity-1])
-	inventory_items[current_capacity-1].set_type(type)
-	inventory_items[current_capacity-1].set_name_to_speech(load(pwd_path + item_definition["name"]))
-	inventory_items[current_capacity-1].set_description_to_speech(load(pwd_path + item_definition["description"]))
-	marked_for_craft.append(false)
-
 func alert_left_end_reached():
 	if not $AlertLeftEndReached.is_playing():
 		$AlertLeftEndReached.play()
@@ -109,8 +93,8 @@ func attempt_craft_with_marked_items():
 	if craft_result:
 		issue_craft_success_feedback()
 		remove_crafted_items_from_inventory()
-		add_inventory_item(craft_result)
-		current_index= max(len(inventory_items) - 1, 0)
+		inventory.add_inventory_item(craft_result)
+		current_index = inventory.get_largest_index()
 		current_item_selected()
 	else:
 		issue_craft_failed_feedback()
@@ -126,14 +110,14 @@ func consume_selected_item():
 	pass
 
 func current_item_selected(end_reached=false):
-	if len(inventory_items) > 0:
-		$WhisperAudioPlayerQueue.add_primary_stream(inventory_items[current_index].get_name_to_speech())
-		if len(inventory_items) > 1:
+	if not inventory.is_empty():
+		$WhisperAudioPlayerQueue.add_primary_stream(inventory.get_name_to_speech_at_index(current_index))
+		if inventory.has_multiple_items():
 			if current_index > 0:
-				$WhisperAudioPlayerQueue.add_whisper_left_stream(inventory_items[current_index-1].get_name_to_speech(), 
+				$WhisperAudioPlayerQueue.add_whisper_left_stream(inventory.get_name_to_speech_at_index(current_index - 1), 
 						DEBUG_WHISPER_DELAY_LEFT)
-			if current_index < len(inventory_items) - 1:
-				$WhisperAudioPlayerQueue.add_whisper_right_stream(inventory_items[current_index+1].get_name_to_speech(), 
+			if current_index < inventory.get_largest_index():
+				$WhisperAudioPlayerQueue.add_whisper_right_stream(inventory.get_name_to_speech_at_index(current_index - 1), 
 						DEBUG_WHISPER_DELAY_RIGHT)
 		$WhisperAudioPlayerQueue.commit()
 		if marked_for_craft[current_index] and not end_reached:
@@ -143,31 +127,6 @@ func current_item_selected(end_reached=false):
 func debug_configure_audio_bus():
 	AudioServer.set_bus_volume_db (1, DEBUG_WHISPER_VOLUME)
 	AudioServer.set_bus_volume_db (2, DEBUG_WHISPER_VOLUME)
-
-#DEBUG
-func debug_load_item_definitions():
-	var gameworld_object_definitions_data = File.new()
-	var file_name = "res://src/gameworld_object_definitions.json"
-	if not gameworld_object_definitions_data.file_exists(file_name):
-		print("ERROR: could not load %s" % file_name)
-		return 
-		
-	gameworld_object_definitions_data.open(file_name, File.READ)
-	gameworld_object_definitions_data = gameworld_object_definitions_data.get_as_text()
-	
-	gameworld_object_definitions = parse_json(gameworld_object_definitions_data)
-	if not typeof(gameworld_object_definitions) == TYPE_DICTIONARY:
-		print("ERROR: gameworld_object_definitions parse result invalid; is type " + str(typeof(gameworld_object_definitions)))
-		return
-
-	for resource_type in gameworld_object_definitions["resources"].keys():
-		craft_mappings[resource_type] = gameworld_object_definitions["resources"][resource_type]["craft_mappings"]
-
-#DEBUG
-func debug_load_inventory_items():
-	var types = ["blue", "green", "red"]
-	for type in types:
-		add_inventory_item(type)
 
 func describe_input_option_to_user():
 	#TODO: determine how to structure this, and whether a singleton would be better
@@ -192,9 +151,9 @@ func describe_input_option_to_user():
 		$InputAssistAudio.play()
 
 func examine_selected_item():
-	$WhisperAudioPlayerQueue.add_primary_stream(inventory_items[current_index].get_name_to_speech())
+	$WhisperAudioPlayerQueue.add_primary_stream(inventory.get_name_to_speech_at_index(current_index))
 	$WhisperAudioPlayerQueue.commit()
-	$WhisperAudioPlayerQueue.add_primary_stream(inventory_items[current_index].get_description_to_speech())
+	$WhisperAudioPlayerQueue.add_primary_stream(inventory.get_description_to_speech_at_index(current_index))
 	$WhisperAudioPlayerQueue.commit()
 
 func get_craft_result(items_to_craft_indecies):
@@ -212,14 +171,14 @@ func get_craft_result(items_to_craft_indecies):
 func get_items_to_craft(items_to_craft_indecies):
 	var items_to_craft = []
 	for item_index in items_to_craft_indecies:
-		items_to_craft.append(inventory_items[item_index].get_type())
+		items_to_craft.append(inventory.get_type_at_index(item_index))
 	items_to_craft.sort()
 	return items_to_craft
 
 func get_items_to_craft_indecies():
 	var items_to_craft_indecies = []
 	var item_index = 0
-	while item_index < len(inventory_items):
+	while item_index < inventory.get_item_count():
 		if marked_for_craft[item_index]:
 			items_to_craft_indecies.append(item_index)
 		item_index = item_index + 1
@@ -231,13 +190,18 @@ func issue_craft_failed_feedback():
 func issue_craft_success_feedback():
 	$SimpleSFXQueue.add(audio_craft_success_sound)
 
+func load_inventory(external_inventory : Inventory):
+	if external_inventory == null:
+		inventory = Inventory.new()
+	else:
+		inventory = external_inventory
+
 func list_free_spaces():
 	var index = 0
-	var number_of_free_spaces = max_capacity - len(inventory_items)
 	$WhisperAudioPlayerQueue.add_primary_stream(speech_free_spaces)
 	$WhisperAudioPlayerQueue.commit()
-	if number_of_free_spaces > 0:
-		while index < number_of_free_spaces:
+	if inventory > 0:
+		while index < inventory.get_count_free_spaces():
 			$WhisperAudioPlayerQueue.add_primary_stream(audio_free_space)
 			$WhisperAudioPlayerQueue.commit()
 			index = index + 1
@@ -247,22 +211,14 @@ func list_free_spaces():
 			
 func list_items_marked_for_craft():
 	var index = 0
-	var items_marked_for_craft = false
-	
-	for item in marked_for_craft:
-		if item:
-			items_marked_for_craft = true
-			break
 
 	$WhisperAudioPlayerQueue.add_primary_stream(speech_marked_for_craft)
 	$WhisperAudioPlayerQueue.commit()
 	
-	if items_marked_for_craft:
-		while index < len(inventory_items):
-			if marked_for_craft[index]:
-				$WhisperAudioPlayerQueue.add_primary_stream(inventory_items[index].get_name_to_speech())
-				$WhisperAudioPlayerQueue.commit()
-			index = index + 1
+	if len(marked_for_craft) > 0:
+		for item_index in marked_for_craft:
+			$WhisperAudioPlayerQueue.add_primary_stream(inventory.get_name_to_speech_at_index(index))
+			$WhisperAudioPlayerQueue.commit()
 	else:
 		$WhisperAudioPlayerQueue.add_primary_stream(speech_none)
 		$WhisperAudioPlayerQueue.commit()
@@ -271,8 +227,8 @@ func list_occupied_spaces():
 	var index = 0
 	$WhisperAudioPlayerQueue.add_primary_stream(speech_occupied_spaces)
 	$WhisperAudioPlayerQueue.commit()
-	if len(inventory_items) > 0:
-		while index < len(inventory_items):
+	if not inventory.is_empty():
+		while index < inventory.get_item_count():
 			$WhisperAudioPlayerQueue.add_primary_stream(audio_occupied_space)
 			$WhisperAudioPlayerQueue.commit()
 			index = index + 1
@@ -290,7 +246,7 @@ func navigate_to_item(direction):
 	Input.stop_joy_vibration(0)
 	stop_all_audio()
 	if direction == "next":
-		if current_index == max(len(inventory_items) - 1, 0):
+		if current_index == inventory.get_largest_index():
 			alert_right_end_reached()
 			end_reached = true
 		else:
@@ -303,18 +259,10 @@ func navigate_to_item(direction):
 			add_val = -1
 			
 	current_index = current_index + add_val
-	if len(inventory_items) > 1:
+	if inventory.has_multiple_items():
 		$WhisperAudioPlayerQueue.add_primary_stream(audio_navigate_sound)
 		$WhisperAudioPlayerQueue.commit()
 	current_item_selected(end_reached)
-
-func on_WhisperDelayLeft_timeout():	
-	if current_index > 0:
-		inventory_items[current_index-1].whisper_name_left()
-
-func on_WhisperDelayRight_timeout():
-	if current_index < len(inventory_items) - 1:
-		inventory_items[current_index+1].whisper_name_right()
 
 func queue_whisper_left_stream(stream):
 	$WhisperLeftAudioPlayer.set_stream(stream)
@@ -328,14 +276,16 @@ func read_status():
 	list_items_marked_for_craft()
 
 func remove_crafted_items_from_inventory():
-	var updated_inventory_items = []
+	var cached_for_removal = []
 	var item_index = 0
-	while item_index < len(inventory_items):
-		if not marked_for_craft[item_index]:
-			updated_inventory_items.append(inventory_items[item_index])
+	while item_index < inventory.get_item_count():
+		if item_index in marked_for_craft:
+			cached_for_removal.append(item_index)
 		item_index = item_index + 1
-	inventory_items = updated_inventory_items
-
+	for item_index in cached_for_removal:
+		marked_for_craft.remove(item_index)
+		inventory.remove_item_at_index(item_index)
+		
 func set_whisper_delay_left(delay):
 	$WhisperDelayLeft.wait_time = delay
 	
@@ -351,19 +301,24 @@ func stop_all_feedback():
 	Input.stop_joy_vibration(0)
 
 func toggle_current_item_craft_mark():
-	var audio_alert = false
-	if not marked_for_craft[current_index]:
-		$SimpleSFXQueue.add(audio_mark_for_craft)
-		#$WhisperAudioPlayerQueue.add_primary_stream(audio_mark_for_craft)
-		#$WhisperAudioPlayerQueue.commit()
+	if not current_index in marked_for_craft:
+		marked_for_craft.append(current_index)
+		if DEBUG_SIMULTANEOUS_MARK_FOR_CRAFT_FEEDBACK: 
+			$SimpleSFXQueue.add(audio_mark_for_craft)
+		else:
+			$WhisperAudioPlayerQueue.add_primary_stream(audio_mark_for_craft)
+			$WhisperAudioPlayerQueue.commit()
 		alert_is_marked_for_craft()
 	else:
-		$SimpleSFXQueue.add(audio_unmark_for_craft)
-		#$WhisperAudioPlayerQueue.add_primary_stream(audio_unmark_for_craft)
-		#$WhisperAudioPlayerQueue.commit()
+		marked_for_craft.remove(current_index)
+		if DEBUG_SIMULTANEOUS_MARK_FOR_CRAFT_FEEDBACK: 
+			$SimpleSFXQueue.add(audio_unmark_for_craft)
+		else:
+			$WhisperAudioPlayerQueue.add_primary_stream(audio_unmark_for_craft)
+			$WhisperAudioPlayerQueue.commit()
 
-	$WhisperAudioPlayerQueue.add_primary_stream(inventory_items[current_index].get_name_to_speech())
+	$WhisperAudioPlayerQueue.add_primary_stream(inventory.get_name_to_speech_at_index(current_index))
 	$WhisperAudioPlayerQueue.commit()
-	marked_for_craft[current_index] = not marked_for_craft[current_index]
+	
 
 	

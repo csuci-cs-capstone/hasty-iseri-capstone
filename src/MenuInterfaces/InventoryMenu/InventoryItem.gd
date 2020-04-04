@@ -1,4 +1,5 @@
 extends Node
+class_name InventoryItem
 
 # Options: none
 var type
