@@ -1,11 +1,11 @@
 extends Node
 class_name InventoryItem
 
-# Options: none
 var type
 var has_consume = false
 
 var consume_sound
+var consume_value
 var identity_sound
 var name_to_speech
 var description_to_speech
@@ -24,6 +24,9 @@ func consume():
 
 func get_consume_sound():
 	return consume_sound
+	
+func get_consume_value():
+	return consume_value
 
 func get_description_to_speech():
 	return description_to_speech
@@ -39,6 +42,9 @@ func get_type():
 
 func set_consume_sound(arg_consume_sound):
 	consume_sound = arg_consume_sound
+
+func set_consume_value(arg_consume_value):
+	consume_value = arg_consume_value
 
 func set_description_to_speech(arg_description_to_speech):
 	description_to_speech = arg_description_to_speech

@@ -18,10 +18,22 @@ _global_script_classes=[ {
 "class": "InventoryItem",
 "language": "GDScript",
 "path": "res://src/MenuInterfaces/InventoryMenu/InventoryItem.gd"
+}, {
+"base": "Control",
+"class": "InventoryMenu",
+"language": "GDScript",
+"path": "res://src/MenuInterfaces/InventoryMenu/InventoryMenu.gd"
+}, {
+"base": "Area2D",
+"class": "Marker",
+"language": "GDScript",
+"path": "res://src/MenuInterfaces/MapMenu/Marker.gd"
 } ]
 _global_script_class_icons={
 "Inventory": "",
-"InventoryItem": ""
+"InventoryItem": "",
+"InventoryMenu": "",
+"Marker": ""
 }
 
 [application]

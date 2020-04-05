@@ -1,9 +1,11 @@
 extends Control
+class_name InventoryMenu
 
 var current_index
-var inventory
+var inventory = null
 var marked_for_craft = []
-var max_capacity = 8 # TODO: this value should be loaded from the Inventory scene system
+var craft_mappings = null
+var gameworld_resource_configurations = null
 
 var audio_craft_success_sound = load("res://src/MenuInterfaces/InventoryMenu/441812__fst180081__180081-hammer-on-anvil-01.wav")
 var audio_craft_failed_sound = load("res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
@@ -25,9 +27,6 @@ var speech_none = load("res://src/MenuInterfaces/InventoryMenu/speech_none.wav")
 var speech_occupied_spaces = load("res://src/MenuInterfaces/InventoryMenu/speech_occupied_spaces.wav")
 
 # DEBUG
-var craft_mappings = {}
-var gameworld_object_definitions
-var InventoryItem
 const DEBUG_WHISPER_VOLUME = -33
 const DEBUG_WHISPER_DELAY_LEFT = .22
 const DEBUG_WHISPER_DELAY_RIGHT = .32
@@ -38,7 +37,6 @@ var whisper_delay_right_timer_active = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	InventoryItem = load("res://src/MenuInterfaces/InventoryMenu/InventoryItem.tscn")
 	current_index = 0
 	debug_configure_audio_bus()
 	current_item_selected()
@@ -72,6 +70,9 @@ func _process(_delta):
 		elif Input.is_action_just_pressed("inventory_menu_get_status"):
 			stop_all_audio()
 			read_status()
+		elif Input.is_action_just_pressed("menu_ui_cancel"):
+			stop_all_audio()
+			close()
 
 func alert_left_end_reached():
 	if not $AlertLeftEndReached.is_playing():
@@ -93,17 +94,17 @@ func attempt_craft_with_marked_items():
 	if craft_result:
 		issue_craft_success_feedback()
 		remove_crafted_items_from_inventory()
-		inventory.add_inventory_item(craft_result)
+		inventory.add_item_from_resource_type(craft_result)
 		current_index = inventory.get_largest_index()
 		current_item_selected()
 	else:
 		issue_craft_failed_feedback()
 			
-	clear_marked_for_craft_via_indecies(items_to_craft_indecies)
-	
-func clear_marked_for_craft_via_indecies(item_indecies):
-	for item_index in item_indecies:
-		marked_for_craft[item_index] = false
+	marked_for_craft = []
+
+func close():
+	# TODO: implement close menu logic
+	pass 
 
 # TODO: initialize consumption mechanic
 func consume_selected_item():
@@ -190,12 +191,6 @@ func issue_craft_failed_feedback():
 func issue_craft_success_feedback():
 	$SimpleSFXQueue.add(audio_craft_success_sound)
 
-func load_inventory(external_inventory : Inventory):
-	if external_inventory == null:
-		inventory = Inventory.new()
-	else:
-		inventory = external_inventory
-
 func list_free_spaces():
 	var index = 0
 	$WhisperAudioPlayerQueue.add_primary_stream(speech_free_spaces)
@@ -236,6 +231,18 @@ func list_occupied_spaces():
 		$WhisperAudioPlayerQueue.add_primary_stream(speech_none)
 		$WhisperAudioPlayerQueue.commit()
 
+func load_craft_mappings(external_craft_mappings):
+	if external_craft_mappings == null:
+		craft_mappings = {"null": null}
+	else:
+		craft_mappings = external_craft_mappings
+
+func load_inventory(external_inventory : Inventory):
+	if external_inventory == null:
+		inventory = Inventory.new()
+	else:
+		inventory = external_inventory
+	
 func load_menu_end_alert_positions():
 	# TODO: use screen resolution to position 2D Audio alert nodes for reaching menu end
 	pass
@@ -283,7 +290,6 @@ func remove_crafted_items_from_inventory():
 			cached_for_removal.append(item_index)
 		item_index = item_index + 1
 	for item_index in cached_for_removal:
-		marked_for_craft.remove(item_index)
 		inventory.remove_item_at_index(item_index)
 		
 func set_whisper_delay_left(delay):
