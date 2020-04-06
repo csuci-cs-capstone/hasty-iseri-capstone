@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/485076__inspectorj__heartbeat-regular-single-01-01-loop.wav-173e6769d584f85f6aa9ff1843017f73.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/Systems/485076__inspectorj__heartbeat-regular-single-01-01-loop.wav"
+dest_files=[ "res://.import/485076__inspectorj__heartbeat-regular-single-01-01-loop.wav-173e6769d584f85f6aa9ff1843017f73.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=false
+edit/loop=false
+compress/mode=0

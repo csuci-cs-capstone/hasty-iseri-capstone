@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/speech_free_spaces.wav-51fe6e910f0f8ace3d3441a64adc69bd.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_free_spaces.wav"
+dest_files=[ "res://.import/speech_free_spaces.wav-51fe6e910f0f8ace3d3441a64adc69bd.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

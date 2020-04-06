@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/speech_waypoint4.wav-1e2f5b021f73a9fb5c5ea9859a43c995.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/GameWorldObjects/Waypoints/speech_waypoint4.wav"
+dest_files=[ "res://.import/speech_waypoint4.wav-1e2f5b021f73a9fb5c5ea9859a43c995.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

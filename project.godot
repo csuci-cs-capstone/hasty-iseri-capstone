@@ -12,22 +12,22 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Inventory",
 "language": "GDScript",
-"path": "res://src/Systems/Inventory/Inventory.gd"
+"path": "res://src/GameWorld/Systems/Inventory/Inventory.gd"
 }, {
 "base": "Node",
 "class": "InventoryItem",
 "language": "GDScript",
-"path": "res://src/MenuInterfaces/InventoryMenu/InventoryItem.gd"
+"path": "res://src/GameWorld/Systems/Inventory/InventoryItem/InventoryItem.gd"
 }, {
 "base": "Control",
 "class": "InventoryMenu",
 "language": "GDScript",
-"path": "res://src/MenuInterfaces/InventoryMenu/InventoryMenu.gd"
+"path": "res://src/GameWorld/MenuInterfaces/InventoryMenu/InventoryMenu.gd"
 }, {
 "base": "Area2D",
 "class": "Marker",
 "language": "GDScript",
-"path": "res://src/MenuInterfaces/MapMenu/Marker.gd"
+"path": "res://src/GameWorld/MenuInterfaces/MapMenu/Marker.gd"
 } ]
 _global_script_class_icons={
 "Inventory": "",
@@ -39,7 +39,7 @@ _global_script_class_icons={
 [application]
 
 config/name="capstone"
-run/main_scene="res://src/Main.tscn"
+run/main_scene="res://src/GameWorld/GameWorld.tscn"
 config/icon="res://icon.png"
 
 [display]

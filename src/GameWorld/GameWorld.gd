@@ -39,7 +39,7 @@ func configure_gameworld_waypoint(gameworld_object):
 	pass # TODO
 
 func load_inventory():
-	inventory = Inventory.new()
+	inventory = Inventory.instance()
 	inventory.load_gameworld_resource_configurations(gameworld_object_configurations['resources'])
 	inventory.load_items()
 	self.add_child(inventory)
@@ -73,6 +73,7 @@ func open_inventory_menu_interface():
 	inventory_menu.load_craft_mappings(gameworld_resource_craft_mappings)
 	inventory_menu.load_inventory(inventory)
 	add_child(inventory_menu)
+	paused = true
 
 func populate_tactile_map_with_marker_data():
 	pass
