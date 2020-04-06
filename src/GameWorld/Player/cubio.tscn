@@ -1,13 +1,10 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
-[ext_resource path="res://white_wood.png" type="Texture" id=1]
-[ext_resource path="res://.import/stomp.wav-8da5a8b3ee33d81f4ac88f0da82297b6.sample" type="AudioStream" id=2]
-[ext_resource path="res://Player.gd" type="Script" id=3]
-[ext_resource path="res://follow_camera.gd" type="Script" id=5]
-
+[ext_resource path="res://src/GameWorld/Player/stomp.wav" type="AudioStream" id=2]
+[ext_resource path="res://src/GameWorld/Player/Player.gd" type="Script" id=3]
+[ext_resource path="res://src/GameWorld/Player/follow_camera.gd" type="Script" id=5]
 
 [sub_resource type="SpatialMaterial" id=1]
-albedo_texture = ExtResource( 1 )
 metallic = 0.46
 roughness = 0.0
 

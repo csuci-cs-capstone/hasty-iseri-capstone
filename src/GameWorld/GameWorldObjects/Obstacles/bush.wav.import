@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/bush.wav-91f734bbb07cb150fb0ce864b4ba750a.sample"
+path="res://.import/bush.wav-d6d718a0fc816e146cfdb0df6f959e72.sample"
 
 [deps]
 
-source_file="res://bush.wav"
-dest_files=[ "res://.import/bush.wav-91f734bbb07cb150fb0ce864b4ba750a.sample" ]
+source_file="res://src/GameWorld/GameWorldObjects/Obstacles/bush.wav"
+dest_files=[ "res://.import/bush.wav-d6d718a0fc816e146cfdb0df6f959e72.sample" ]
 
 [params]
 

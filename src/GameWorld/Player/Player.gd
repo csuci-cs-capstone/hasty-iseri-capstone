@@ -17,17 +17,17 @@ func _physics_process(delta):
 	var dir = Vector3() # Where does the player intend to walk to
 	var cam_xform = $target/camera.get_global_transform()
 
-	if Input.is_action_pressed("move_forward"):
+	if Input.is_action_pressed("gameworld_move_forward"):
 		dir += -cam_xform.basis[2]
-	if Input.is_action_pressed("move_backwards"):
+	if Input.is_action_pressed("gameworld_move_backwards"):
 		dir += cam_xform.basis[2]
-	if Input.is_action_pressed("move_left"):
+	if Input.is_action_pressed("gameworld_move_left"):
 		dir += -cam_xform.basis[0]
-	if Input.is_action_pressed("move_right"):
+	if Input.is_action_pressed("gameworld_move_right"):
 		dir += cam_xform.basis[0]
-	if Input.is_action_just_pressed("echo") && !ismoving():
+	if Input.is_action_just_pressed("gameworld_echo") && !ismoving():
 		echo()
-	if Input.is_action_just_pressed("interact"):
+	if Input.is_action_just_pressed("gameworld_interact"):
 		interact()
 		print(inv)
 	dir.y = 0
@@ -76,6 +76,8 @@ func interact():
 	for i in InteractList:
 		i.interactable = false
 		#TODO actual inventory system
+		# emit signal harvested and what harvested
+		# play pick up sound
 		inv = inv + 1
 		InteractList.erase(i)
 		

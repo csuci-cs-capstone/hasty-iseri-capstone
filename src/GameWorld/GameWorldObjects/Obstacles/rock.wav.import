@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/rock.wav-2cbd184feb27fcea5cccfa2f36a963ac.sample"
+path="res://.import/rock.wav-30a2672357efcb775299dd313ab061c0.sample"
 
 [deps]
 
-source_file="res://rock.wav"
-dest_files=[ "res://.import/rock.wav-2cbd184feb27fcea5cccfa2f36a963ac.sample" ]
+source_file="res://src/GameWorld/GameWorldObjects/Obstacles/rock.wav"
+dest_files=[ "res://.import/rock.wav-30a2672357efcb775299dd313ab061c0.sample" ]
 
 [params]
 
