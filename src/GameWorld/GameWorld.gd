@@ -2,7 +2,7 @@ extends Node
 
 var paused = false
 var gameworld_object_configurations
-var gameworld_resource_craft_mappings
+var gameworld_resource_craft_mappings = {}
 var inventory
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -12,7 +12,8 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if not paused:
-		pass # TODO: impelement GameWorld processing here
+		if Input.is_action_just_pressed("gameworld_open_inventory_menu"):
+			open_inventory_menu()
 
 func configure_gameworld_artifact(gameworld_object):
 	pass # TODO
@@ -39,14 +40,14 @@ func configure_gameworld_waypoint(gameworld_object):
 	pass # TODO
 
 func load_inventory():
-	inventory = Inventory.instance()
+	inventory = Inventory.new()
 	inventory.load_gameworld_resource_configurations(gameworld_object_configurations['resources'])
 	inventory.load_items()
 	self.add_child(inventory)
 
 func load_object_configurations():
 	var gameworld_object_configurations_data = File.new()
-	var file_name = "res://src/gameworld_object_definitions.json"
+	var file_name = "res://src/GameWorld/gameworld_object_definitions.json"
 	if not gameworld_object_configurations_data.file_exists(file_name):
 		print("ERROR: could not load %s" % file_name)
 		return 
@@ -62,13 +63,13 @@ func load_object_configurations():
 	for resource_type in gameworld_object_configurations["resources"].keys():
 		gameworld_resource_craft_mappings[resource_type] = gameworld_object_configurations["resources"][resource_type]["craft_mappings"]
 
-func open_map_menu_interface():
+func open_map_menu():
 	# TODO: load tactile map scene and configure data for:
 	# player position, waypoint(s), resources
 	populate_tactile_map_with_marker_data()
 	pass
 
-func open_inventory_menu_interface():
+func open_inventory_menu():
 	var inventory_menu = InventoryMenu.new()
 	inventory_menu.load_craft_mappings(gameworld_resource_craft_mappings)
 	inventory_menu.load_inventory(inventory)

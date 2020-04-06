@@ -5,7 +5,6 @@
 [ext_resource path="res://442161__isteak__enter-button-low-robotic.wav" type="AudioStream" id=3]
 [ext_resource path="res://src/WhisperAudioPlayerQueue.tscn" type="PackedScene" id=8]
 
-
 [node name="InventoryMenu" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0

@@ -7,24 +7,23 @@ var marked_for_craft = []
 var craft_mappings = null
 var gameworld_resource_configurations = null
 
-var audio_craft_success_sound = load("res://src/MenuInterfaces/InventoryMenu/441812__fst180081__180081-hammer-on-anvil-01.wav")
-var audio_craft_failed_sound = load("res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
-var audio_close_craft_alert = load("res://src/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
-var audio_free_space = load("res://src/MenuInterfaces/InventoryMenu/411221__andersholm__rustling-of-chips-bag.wav")
-var audio_mark_for_craft = load("res://src/MenuInterfaces/InventoryMenu/418850__kierankeegan__rachet-click.wav")
-var audio_navigate_sound = load("res://src/MenuInterfaces/213148__complex-waveform__click.wav")
-var audio_occupied_space = load("res://src/MenuInterfaces/InventoryMenu/TylerHasty_key01.wav")
-var audio_unmark_for_craft = load("res://src/MenuInterfaces/419494__plasterbrain__high-tech-ui-cancel.wav")
+var audio_craft_success_sound = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/441812__fst180081__180081-hammer-on-anvil-01.wav")
+var audio_craft_failed_sound = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
+var audio_close_craft_alert = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
+var audio_free_space = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/411221__andersholm__rustling-of-chips-bag.wav")
+var audio_mark_for_craft = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/418850__kierankeegan__rachet-click.wav")
+var audio_navigate_sound = load("res://src/GameWorld/MenuInterfaces/213148__complex-waveform__click.wav")
+var audio_occupied_space = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/TylerHasty_key01.wav")
+var audio_unmark_for_craft = load("res://src/GameWorld/MenuInterfaces/419494__plasterbrain__high-tech-ui-cancel.wav")
 
-var speech_assist_examine = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_examine.wav")
-var speech_assist_consume = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_consume.wav")
-var speech_assist_craft = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_craft.wav")
-var speech_assist_cancel = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_cancel.wav")
-var speech_assist_cancel_craft = load("res://src/MenuInterfaces/InventoryMenu/speech_assist_cancel_craft_1.wav")
-var speech_free_spaces = load("res://src/MenuInterfaces/InventoryMenu/speech_free_spaces.wav")
-var speech_marked_for_craft = load("res://src/MenuInterfaces/InventoryMenu/speech_marked_for_craft.wav")
-var speech_none = load("res://src/MenuInterfaces/InventoryMenu/speech_none.wav")
-var speech_occupied_spaces = load("res://src/MenuInterfaces/InventoryMenu/speech_occupied_spaces.wav")
+var speech_assist_cancel = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_assist_cancel.wav")
+var speech_assist_consume = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_assist_consume.wav")
+var speech_assist_craft = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_assist_craft.wav")
+var speech_assist_examine = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_assist_examine.wav")
+var speech_free_spaces = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_free_spaces.wav")
+var speech_marked_for_craft = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_marked_for_craft.wav")
+var speech_none = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_none.wav")
+var speech_occupied_spaces = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_occupied_spaces.wav")
 
 # DEBUG
 const DEBUG_WHISPER_VOLUME = -33

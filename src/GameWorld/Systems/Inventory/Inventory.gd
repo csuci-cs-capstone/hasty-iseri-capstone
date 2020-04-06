@@ -5,19 +5,16 @@ var inventory_items = null
 var max_capacity = 8
 var gameworld_resource_configurations = null
 
+const RESOURCE_LOAD_PATH = "res://src/GameWorld/GameWorldObjects/Resources/"
+
 # TODO: define and load all inventory_item sounds in this interface
 # GameWorld will populate the inventory menu with inventory items
 
-# DEBUG
-var speech_blue = load("res://src/MenuInterfaces/InventoryMenu/speech_blue.wav")
-var speech_green = load("res://src/MenuInterfaces/InventoryMenu/speech_green.wav")
-var speech_red = load("res://src/MenuInterfaces/InventoryMenu/speech_red.wav")
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
-
-	if not inventory_items:
-		debug_load_items()
+	#if not inventory_items and gameworld_resource_configurations:
+	#	debug_load_items()
+	pass
 	
 # DEBUG
 func debug_load_items():
@@ -27,13 +24,18 @@ func debug_load_items():
 		add_item_from_resource_type(type)
 
 func add_item_from_resource_type(resource_type):
-	var new_item = InventoryItem.instance()
+	var new_item = InventoryItem.new()
 	var resource_type_config = gameworld_resource_configurations[resource_type]
-	new_item.set_consume_sound(resource_type_config["consume_sound"])
-	new_item.set_consume_value(resource_type_config["consume_value"])
-	new_item.set_description_to_speech(resource_type_config["description"])
-	new_item.set_identity_sound(resource_type_config["identity_sound"])
-	new_item.set_name_to_speech(resource_type_config["name"])
+	if resource_type_config.has("consume_sound"):
+		new_item.set_consume_sound(load(RESOURCE_LOAD_PATH + resource_type_config["consume_sound"]))
+	if resource_type_config.has("consume_value"):
+		new_item.set_consume_value(load(RESOURCE_LOAD_PATH + resource_type_config["consume_value"]))
+	if resource_type_config.has("description"):
+		new_item.set_description_to_speech(load(RESOURCE_LOAD_PATH + resource_type_config["description"]))
+	if resource_type_config.has("identity_sound"):
+		new_item.set_identity_sound(load(RESOURCE_LOAD_PATH + resource_type_config["identity_sound"]))
+	if resource_type_config.has("name"):
+		new_item.set_name_to_speech(load(RESOURCE_LOAD_PATH + resource_type_config["name"]))
 	new_item.set_type(resource_type)
 	inventory_items.append(new_item)
 	add_child(new_item)
@@ -78,7 +80,7 @@ func is_empty():
 	return false
 
 func load_gameworld_resource_configurations(external_config):
-	if gameworld_resource_configurations == null:
+	if external_config == null:
 		gameworld_resource_configurations = {"null": null}
 	else:
 		gameworld_resource_configurations = external_config
