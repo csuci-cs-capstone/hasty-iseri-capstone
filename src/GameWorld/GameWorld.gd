@@ -4,6 +4,8 @@ var paused = false
 var gameworld_object_configurations
 var gameworld_resource_craft_mappings = {}
 var inventory
+
+var InventoryMenu = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/InventoryMenu.tscn")
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	load_object_configurations()
@@ -40,10 +42,9 @@ func configure_gameworld_waypoint(gameworld_object):
 	pass # TODO
 
 func load_inventory():
-	inventory = Inventory.new()
+	inventory = $Inventory
 	inventory.load_gameworld_resource_configurations(gameworld_object_configurations['resources'])
 	inventory.load_items()
-	self.add_child(inventory)
 
 func load_object_configurations():
 	var gameworld_object_configurations_data = File.new()
@@ -70,7 +71,7 @@ func open_map_menu():
 	pass
 
 func open_inventory_menu():
-	var inventory_menu = InventoryMenu.new()
+	var inventory_menu = InventoryMenu.instance()
 	inventory_menu.load_craft_mappings(gameworld_resource_craft_mappings)
 	inventory_menu.load_inventory(inventory)
 	add_child(inventory_menu)

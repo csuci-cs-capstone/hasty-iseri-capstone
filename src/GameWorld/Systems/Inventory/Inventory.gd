@@ -1,9 +1,10 @@
 extends Node
+
 class_name Inventory
 
-var inventory_items = null
+var inventory_items = []
 var max_capacity = 8
-var gameworld_resource_configurations = null
+var gameworld_resource_configurations = {}
 
 const RESOURCE_LOAD_PATH = "res://src/GameWorld/GameWorldObjects/Resources/"
 
@@ -42,11 +43,11 @@ func add_item_from_resource_type(resource_type):
 
 func get_description_to_speech_at_index(index):
 	if len(inventory_items) - 1 >= index:
-		inventory_items[index].get_description_to_speech()
+		return inventory_items[index].get_description_to_speech()
 	return null
 
 func get_free_spaces_count():
-	return  max_capacity - len(inventory_items)
+	return max_capacity - len(inventory_items)
 
 func get_item_at_index(index):
 	if len(inventory_items) - 1 >= index:
@@ -55,7 +56,7 @@ func get_item_at_index(index):
 	
 func get_name_to_speech_at_index(index):
 	if len(inventory_items) - 1 >= index:
-		inventory_items[index].get_name_to_speech()
+		return inventory_items[index].get_name_to_speech()
 	return null
 
 func get_largest_index():
@@ -66,7 +67,7 @@ func get_item_count():
 
 func get_type_at_index(index):
 	if len(inventory_items) - 1 >= index:
-		inventory_items[index].get_type()
+		return inventory_items[index].get_type()
 	return null
 
 func has_multiple_items():

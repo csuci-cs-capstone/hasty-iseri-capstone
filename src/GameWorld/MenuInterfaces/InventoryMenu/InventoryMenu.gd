@@ -1,4 +1,5 @@
 extends Control
+
 class_name InventoryMenu
 
 var current_index
@@ -21,9 +22,17 @@ var speech_assist_consume = load("res://src/GameWorld/MenuInterfaces/InventoryMe
 var speech_assist_craft = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_assist_craft.wav")
 var speech_assist_examine = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_assist_examine.wav")
 var speech_free_spaces = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_free_spaces.wav")
+var speech_inventory_menu = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_inventory_menu.wav")
 var speech_marked_for_craft = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_marked_for_craft.wav")
 var speech_none = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_none.wav")
 var speech_occupied_spaces = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_occupied_spaces.wav")
+
+# Nodes
+#onready var AlertLeftEndReached = get_node("AlertLeftEndReached")
+#onready var AlertRightEndReached = get_node("AlertRightEndReached")
+#onready var InputAssistAudio = get_node("InputAssistAudio")
+#onready var SimpleSFXQueue = get_node("SimpleSFXQueue")
+#onready var WhisperAudioPlayerQueue = get_node("WhisperAudioPlayerQueue")
 
 # DEBUG
 const DEBUG_WHISPER_VOLUME = -33
@@ -37,6 +46,10 @@ var whisper_delay_right_timer_active = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	current_index = 0
+	if not inventory:
+		inventory = Inventory.new()
+	$WhisperAudioPlayerQueue.add_primary_stream(speech_inventory_menu)
+	$WhisperAudioPlayerQueue.commit()
 	debug_configure_audio_bus()
 	current_item_selected()
 	
@@ -117,10 +130,10 @@ func current_item_selected(end_reached=false):
 				$WhisperAudioPlayerQueue.add_whisper_left_stream(inventory.get_name_to_speech_at_index(current_index - 1), 
 						DEBUG_WHISPER_DELAY_LEFT)
 			if current_index < inventory.get_largest_index():
-				$WhisperAudioPlayerQueue.add_whisper_right_stream(inventory.get_name_to_speech_at_index(current_index - 1), 
+				$WhisperAudioPlayerQueue.add_whisper_right_stream(inventory.get_name_to_speech_at_index(current_index + 1), 
 						DEBUG_WHISPER_DELAY_RIGHT)
 		$WhisperAudioPlayerQueue.commit()
-		if marked_for_craft[current_index] and not end_reached:
+		if current_index in marked_for_craft and not end_reached:
 			alert_is_marked_for_craft()
 		
 #DEBUG
@@ -130,7 +143,6 @@ func debug_configure_audio_bus():
 
 func describe_input_option_to_user():
 	#TODO: determine how to structure this, and whether a singleton would be better
-
 	if Input.is_action_just_pressed("menu_ui_right"):
 		pass
 	elif Input.is_action_just_pressed("menu_ui_left"):
@@ -269,12 +281,6 @@ func navigate_to_item(direction):
 		$WhisperAudioPlayerQueue.add_primary_stream(audio_navigate_sound)
 		$WhisperAudioPlayerQueue.commit()
 	current_item_selected(end_reached)
-
-func queue_whisper_left_stream(stream):
-	$WhisperLeftAudioPlayer.set_stream(stream)
-
-func queue_whisper_right_stream(stream):
-	$WhisperRightAudioPlayer.set_stream(stream)
 
 func read_status():
 	list_occupied_spaces()

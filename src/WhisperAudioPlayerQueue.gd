@@ -1,9 +1,5 @@
 extends Node
 
-
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 var stream_queue = []
 var current_stream_data = {}
 var next_stream_data = {}
