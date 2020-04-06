@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/white_wood.png-6895acd60ce97b4315494d2be377c357.s3tc.stex"
-path.etc2="res://.import/white_wood.png-6895acd60ce97b4315494d2be377c357.etc2.stex"
+path.s3tc="res://.import/white_wood.png-19015cde0eb15da6019dc6819c2b1c12.s3tc.stex"
+path.etc2="res://.import/white_wood.png-19015cde0eb15da6019dc6819c2b1c12.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://white_wood.png"
-dest_files=[ "res://.import/white_wood.png-6895acd60ce97b4315494d2be377c357.s3tc.stex", "res://.import/white_wood.png-6895acd60ce97b4315494d2be377c357.etc2.stex" ]
+source_file="res://src/GameWorld/Player/white_wood.png"
+dest_files=[ "res://.import/white_wood.png-19015cde0eb15da6019dc6819c2b1c12.s3tc.stex", "res://.import/white_wood.png-19015cde0eb15da6019dc6819c2b1c12.etc2.stex" ]
 
 [params]
 

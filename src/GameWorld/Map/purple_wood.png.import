@@ -2,8 +2,8 @@
 
 importer="texture"
 type="StreamTexture"
-path.s3tc="res://.import/purple_wood.png-ae65a206e7a59edf759728c3bad04e56.s3tc.stex"
-path.etc2="res://.import/purple_wood.png-ae65a206e7a59edf759728c3bad04e56.etc2.stex"
+path.s3tc="res://.import/purple_wood.png-0b899103b04f376aead00da4a4c67e9e.s3tc.stex"
+path.etc2="res://.import/purple_wood.png-0b899103b04f376aead00da4a4c67e9e.etc2.stex"
 metadata={
 "imported_formats": [ "s3tc", "etc2" ],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://purple_wood.png"
-dest_files=[ "res://.import/purple_wood.png-ae65a206e7a59edf759728c3bad04e56.s3tc.stex", "res://.import/purple_wood.png-ae65a206e7a59edf759728c3bad04e56.etc2.stex" ]
+source_file="res://src/GameWorld/Map/purple_wood.png"
+dest_files=[ "res://.import/purple_wood.png-0b899103b04f376aead00da4a4c67e9e.s3tc.stex", "res://.import/purple_wood.png-0b899103b04f376aead00da4a4c67e9e.etc2.stex" ]
 
 [params]
 
