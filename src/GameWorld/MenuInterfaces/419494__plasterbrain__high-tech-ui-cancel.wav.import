@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/419494__plasterbrain__high-tech-ui-cancel.wav-ad724fe33dae15038457d8a30c8b0630.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/MenuInterfaces/419494__plasterbrain__high-tech-ui-cancel.wav"
+dest_files=[ "res://.import/419494__plasterbrain__high-tech-ui-cancel.wav-ad724fe33dae15038457d8a30c8b0630.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=false
+edit/loop=false
+compress/mode=0

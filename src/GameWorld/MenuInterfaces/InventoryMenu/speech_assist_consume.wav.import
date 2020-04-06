@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/speech_assist_consume.wav-6a9ec0803b0dd2d1267472ac8206bc9c.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/MenuInterfaces/InventoryMenu/speech_assist_consume.wav"
+dest_files=[ "res://.import/speech_assist_consume.wav-6a9ec0803b0dd2d1267472ac8206bc9c.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

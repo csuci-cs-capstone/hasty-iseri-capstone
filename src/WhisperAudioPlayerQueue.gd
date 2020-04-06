@@ -1,9 +1,7 @@
 extends Node
 
+signal current_stream_complete
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
 var stream_queue = []
 var current_stream_data = {}
 var next_stream_data = {}
@@ -81,6 +79,7 @@ func init_whisper_delay_right_timer(delay):
 
 func on_PrimaryAudioStreamPlayer_finished():
 	current_stream_complete = true
+	emit_signal("current_stream_complete")
 
 func on_WhisperDelayLeft_timeout():
 	$WhisperLeftAudioPlayer.play()
