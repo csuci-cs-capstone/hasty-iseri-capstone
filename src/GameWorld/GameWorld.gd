@@ -64,6 +64,11 @@ func load_object_configurations():
 	for resource_type in gameworld_object_configurations["resources"].keys():
 		gameworld_resource_craft_mappings[resource_type] = gameworld_object_configurations["resources"][resource_type]["craft_mappings"]
 
+func on_InventoryMenu_closed():
+	if has_node("./InventoryMenu"):
+		$InventoryMenu.queue_free()
+	paused = false
+
 func open_map_menu():
 	# TODO: load tactile map scene and configure data for:
 	# player position, waypoint(s), resources
@@ -72,8 +77,10 @@ func open_map_menu():
 
 func open_inventory_menu():
 	var inventory_menu = InventoryMenu.instance()
+	#inventory_menu.name = "InventoryMenu"
 	inventory_menu.load_craft_mappings(gameworld_resource_craft_mappings)
 	inventory_menu.load_inventory(inventory)
+	inventory_menu.connect("closed",self,"on_InventoryMenu_closed")
 	add_child(inventory_menu)
 	paused = true
 

@@ -1,6 +1,7 @@
 extends Control
-
 class_name InventoryMenu
+
+signal closed
 
 var current_index
 var inventory = null
@@ -10,7 +11,7 @@ var gameworld_resource_configurations = null
 
 var audio_craft_success_sound = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/441812__fst180081__180081-hammer-on-anvil-01.wav")
 var audio_craft_failed_sound = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
-var audio_close_craft_alert = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
+var audio_close_craft_alert = load("res://src/GameWorld/MenuInterfaces/419494__plasterbrain__high-tech-ui-cancel.wav")
 var audio_free_space = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/411221__andersholm__rustling-of-chips-bag.wav")
 var audio_mark_for_craft = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/418850__kierankeegan__rachet-click.wav")
 var audio_navigate_sound = load("res://src/GameWorld/MenuInterfaces/213148__complex-waveform__click.wav")
@@ -48,6 +49,7 @@ func _ready():
 	current_index = 0
 	if not inventory:
 		inventory = Inventory.new()
+	$CloseMenuSound.connect("finished",self,"on_CloseMenuSound_finished")
 	$WhisperAudioPlayerQueue.add_primary_stream(speech_inventory_menu)
 	$WhisperAudioPlayerQueue.commit()
 	debug_configure_audio_bus()
@@ -115,8 +117,7 @@ func attempt_craft_with_marked_items():
 	marked_for_craft = []
 
 func close():
-	# TODO: implement close menu logic
-	pass 
+	$CloseMenuSound.play()
 
 # TODO: initialize consumption mechanic
 func consume_selected_item():
@@ -281,6 +282,9 @@ func navigate_to_item(direction):
 		$WhisperAudioPlayerQueue.add_primary_stream(audio_navigate_sound)
 		$WhisperAudioPlayerQueue.commit()
 	current_item_selected(end_reached)
+
+func on_CloseMenuSound_finished():
+	emit_signal("closed")
 
 func read_status():
 	list_occupied_spaces()
