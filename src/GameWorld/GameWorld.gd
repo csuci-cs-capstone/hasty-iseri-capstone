@@ -37,10 +37,13 @@ func configure_gameworld_objects():
 func configure_gameworld_obstacle(gameworld_obstacle):
 	var type = gameworld_obstacle.get_type()
 	var gameworld_obstacle_config = gameworld_object_configurations["obstacles"][type]
-	gameworld_obstacle.set_identity_sound(gameworld_obstacle_config["identity_sound"])
+	if gameworld_object_configurations["obstacles"][type].has("identity_sound"):
+		gameworld_obstacle.set_identity_sound(gameworld_obstacle_config["identity_sound"])
+	if gameworld_object_configurations["obstacles"][type].has("resource"):
+		gameworld_obstacle.set_resource(gameworld_obstacle_config["resource"])
 	
 func configure_gameworld_resource(gameworld_object):
-	pass # TODO
+	pass # T
 
 func configure_gameworld_waypoint(gameworld_object):
 	pass # TODO

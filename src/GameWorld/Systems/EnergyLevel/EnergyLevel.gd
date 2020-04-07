@@ -6,9 +6,9 @@ signal energy_level_zero
 
 var energy_level
 
-var audio_energy_decreased = load("res://src/Systems/220205__gameaudio__teleport-darker.wav")
-var audio_energy_increased = load("res://src/Systems/220173__gameaudio__spacey-1up-power-up.wav")
-var audio_magnitude = load("res://src/Systems/485076__inspectorj__heartbeat-regular-single-01-01-loop.wav")
+var audio_energy_decreased = load("res://src/GameWorld/Systems/220205__gameaudio__teleport-darker.wav")
+var audio_energy_increased = load("res://src/GameWorld/Systems/220173__gameaudio__spacey-1up-power-up.wav")
+var audio_magnitude = load("res://src/GameWorld/Systems/485076__inspectorj__heartbeat-regular-single-01-01-loop.wav")
 
 var magnitude_feedback_active = false
 var magnitude_feedback_timer = 0
