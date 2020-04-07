@@ -49,7 +49,7 @@ func configure_gameworld_obstacle(gameworld_obstacle):
 		type = "boulder"
 	elif "Bush" in gameworld_obstacle.name:
 		type = "bush"
-		
+	
 	var RESOURCE_LOAD_PATH = "res://src/GameWorld/GameWorldObjects/Obstacles/"
 	var gameworld_obstacle_config = gameworld_object_configurations["obstacles"][type]
 	if gameworld_object_configurations["obstacles"][type].has("identity_sound"):

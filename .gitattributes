@@ -5,6 +5,9 @@
 *.ogg filter=lfs diff=lfs merge=lfs -text lockable
 *.wav filter=lfs diff=lfs merge=lfs -text lockable
 
+### Mesh/3D
+*.meshlib filter=lfs diff=lfs merge=lfs -text lockable
+
 # Build and Release Binaries
 release/windows/ filter=lfs diff=lfs merge=lfs -text
 release/linux/ filter=lfs diff=lfs merge=lfs -text
