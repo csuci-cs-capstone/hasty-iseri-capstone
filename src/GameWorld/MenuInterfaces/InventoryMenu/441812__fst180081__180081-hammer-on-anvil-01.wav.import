@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/441812__fst180081__180081-hammer-on-anvil-01.wav-c4b90a3ed5b40b8402773004ff567002.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/MenuInterfaces/InventoryMenu/441812__fst180081__180081-hammer-on-anvil-01.wav"
+dest_files=[ "res://.import/441812__fst180081__180081-hammer-on-anvil-01.wav-c4b90a3ed5b40b8402773004ff567002.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

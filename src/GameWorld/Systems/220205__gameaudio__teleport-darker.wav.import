@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/220205__gameaudio__teleport-darker.wav-810dbab14c4e6cd2356acdf8fa815173.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/Systems/220205__gameaudio__teleport-darker.wav"
+dest_files=[ "res://.import/220205__gameaudio__teleport-darker.wav-810dbab14c4e6cd2356acdf8fa815173.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=false
+edit/loop=false
+compress/mode=0

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/rock.wav-30a2672357efcb775299dd313ab061c0.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/GameWorldObjects/Obstacles/rock.wav"
+dest_files=[ "res://.import/rock.wav-30a2672357efcb775299dd313ab061c0.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

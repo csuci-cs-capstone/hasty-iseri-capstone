@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/waypoint_placed.wav-1efca4021499d94c8803b8c88abe618c.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/MenuInterfaces/MapMenu/waypoint_placed.wav"
+dest_files=[ "res://.import/waypoint_placed.wav-1efca4021499d94c8803b8c88abe618c.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
