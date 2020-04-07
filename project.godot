@@ -39,7 +39,7 @@ _global_script_class_icons={
 [application]
 
 config/name="capstone"
-run/main_scene="res://src/GameWorld/Map/EchoTestSpaceMeshLib2.tscn"
+run/main_scene="res://src/GameWorld/GameWorld.tscn"
 config/icon="res://icon.png"
 
 [display]

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/speech_sticks_description.wav-5d231e65bde012a9a0333a65b3d324f9.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/GameWorldObjects/Resources/speech_sticks_description.wav"
+dest_files=[ "res://.import/speech_sticks_description.wav-5d231e65bde012a9a0333a65b3d324f9.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0
