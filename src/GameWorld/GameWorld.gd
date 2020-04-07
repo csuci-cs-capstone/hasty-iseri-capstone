@@ -18,6 +18,8 @@ func _process(delta):
 	if not paused:
 		if Input.is_action_just_pressed("gameworld_open_inventory_menu"):
 			open_inventory_menu()
+		elif Input.is_action_just_pressed("gameworld_energy_level"):
+			$EnergyLevel.init_magnituted_feedback()
 
 func configure_gameworld_artifact(gameworld_object):
 	pass # TODO
@@ -37,10 +39,13 @@ func configure_gameworld_objects():
 func configure_gameworld_obstacle(gameworld_obstacle):
 	var type = gameworld_obstacle.get_type()
 	var gameworld_obstacle_config = gameworld_object_configurations["obstacles"][type]
-	gameworld_obstacle.set_identity_sound(gameworld_obstacle_config["identity_sound"])
+	if gameworld_object_configurations["obstacles"][type].has("identity_sound"):
+		gameworld_obstacle.set_identity_sound(gameworld_obstacle_config["identity_sound"])
+	if gameworld_object_configurations["obstacles"][type].has("resource"):
+		gameworld_obstacle.set_resource(gameworld_obstacle_config["resource"])
 	
 func configure_gameworld_resource(gameworld_object):
-	pass # TODO
+	pass # T
 
 func configure_gameworld_waypoint(gameworld_object):
 	pass # TODO
@@ -73,6 +78,9 @@ func on_InventoryMenu_closed():
 		$InventoryMenu.queue_free()
 	paused = false
 
+func on_InventoryMenu_item_consumed(consume_value):
+	$EnergyLevel.update(consume_value)
+
 func on_Obstacle_harvested(obstacle_type: String):
 	if not inventory.is_at_max_capacity():
 		inventory.add_from_type(obstacle_type)
@@ -92,9 +100,6 @@ func open_inventory_menu():
 	inventory_menu.connect("item_consumed",self,"on_InventoryMenu_item_consumed")
 	add_child(inventory_menu)
 	paused = true
-
-func on_InventoryMenu_item_consumed(item_type):
-	pass
 
 func pause_game():
 	paused = true
