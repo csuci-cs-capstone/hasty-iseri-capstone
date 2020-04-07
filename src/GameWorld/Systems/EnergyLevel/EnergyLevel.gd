@@ -80,6 +80,12 @@ func reset_magnitude_audio():
 	magnitude_feedback_active = false
 	$MagnitudeAudio.position.x = 0
 
+func update(value):
+	if value > 0:
+		increase(value)
+	elif value < 0:
+		decrease(value)
+
 func update_magnitude_feedback_position(delta):
 	if $MagnitudeAudio.position.x < horizontal_max:
 		$MagnitudeAudio.position.x = $MagnitudeAudio.position.x + magnitude_velocity*delta

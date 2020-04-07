@@ -21,7 +21,7 @@ func _ready():
 # DEBUG
 func debug_load_items():
 	inventory_items = []
-	var types = ["sticks", "stones", "red", "blue", "green"]
+	var types = ["apple", "sticks", "stones", "red", "blue", "green"]
 	for type in types:
 		add_item_from_resource_type(type)
 
@@ -31,7 +31,7 @@ func add_item_from_resource_type(resource_type):
 	if resource_type_config.has("consume_sound"):
 		new_item.set_consume_sound(load(RESOURCE_LOAD_PATH + resource_type_config["consume_sound"]))
 	if resource_type_config.has("consume_value"):
-		new_item.set_consume_value(load(RESOURCE_LOAD_PATH + resource_type_config["consume_value"]))
+		new_item.set_consume_value(resource_type_config["consume_value"])
 	if resource_type_config.has("description"):
 		new_item.set_description_to_speech(load(RESOURCE_LOAD_PATH + resource_type_config["description"]))
 	if resource_type_config.has("identity_sound"):
@@ -109,7 +109,7 @@ func load_items():
 	# DEBUG: temporary item load
 	debug_load_items()
 
-func remove_item_by_index(item_index):
+func remove_item_at_index(item_index):
 	if len(inventory_items) >= item_index:
 		inventory_items.remove(item_index)
 
