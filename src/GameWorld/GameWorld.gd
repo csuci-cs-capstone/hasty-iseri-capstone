@@ -38,6 +38,7 @@ func configure_gameworld_objects():
 
 func configure_gameworld_obstacle(gameworld_obstacle):
 	var type = gameworld_obstacle.get_type()
+	gameworld_obstacle.connect("harvested",self,"on_Obstacle_harvested")
 	var gameworld_obstacle_config = gameworld_object_configurations["obstacles"][type]
 	if gameworld_object_configurations["obstacles"][type].has("identity_sound"):
 		gameworld_obstacle.set_identity_sound(gameworld_obstacle_config["identity_sound"])
@@ -76,14 +77,14 @@ func load_object_configurations():
 func on_InventoryMenu_closed():
 	if has_node("./InventoryMenu"):
 		$InventoryMenu.queue_free()
-	paused = false
+	unpause_game()
 
 func on_InventoryMenu_item_consumed(consume_value):
 	$EnergyLevel.update(consume_value)
 
-func on_Obstacle_harvested(obstacle_type: String):
+func on_Obstacle_harvested(resource_type: String):
 	if not inventory.is_at_max_capacity():
-		inventory.add_item_from_resource_type(obstacle_type)
+		inventory.add_item_from_resource_type(resource_type)
 
 func open_map_menu():
 	# TODO: load tactile map scene and configure data for:
@@ -105,6 +106,9 @@ func pause_game():
 	paused = true
 	$world/Player.paused = true
 	
-
 func populate_tactile_map_with_marker_data():
 	pass
+
+func unpause_game():
+	paused = false
+	$world/Player.paused = false
