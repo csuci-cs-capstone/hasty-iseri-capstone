@@ -107,7 +107,7 @@ func _on_EchoRange7_area_entered(area):
 func _on_EchoRange7_area_exited(area):
 	#if area.get_child(2):
 	#	if area.get_child(2).get_class() == "AudioStreamPlayer3D":
-	#		EchoList.erase(area.get_child(2)esare)
+	#		EchoList.erase(area.get_child(2))
 	if area.has_node("AudioStreamPlayer3D"):
 		EchoList.erase(area.get_node("AudioStreamPlayer3D"))
 
