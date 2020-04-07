@@ -2,6 +2,7 @@ extends Control
 class_name InventoryMenu
 
 signal closed
+signal item_consumed
 
 var current_index
 var inventory = null
@@ -9,6 +10,7 @@ var marked_for_craft = []
 var craft_mappings = null
 var gameworld_resource_configurations = null
 
+var audio_consume_failed_sound = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
 var audio_craft_success_sound = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/441812__fst180081__180081-hammer-on-anvil-01.wav")
 var audio_craft_failed_sound = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav")
 var audio_close_craft_alert = load("res://src/GameWorld/MenuInterfaces/419494__plasterbrain__high-tech-ui-cancel.wav")
@@ -50,6 +52,7 @@ func _ready():
 	if not inventory:
 		inventory = Inventory.new()
 	$CloseMenuSound.connect("finished",self,"on_CloseMenuSound_finished")
+	$ConsumeSound.connect("finished",self,"on_ConsumeSound_finished")
 	$WhisperAudioPlayerQueue.add_primary_stream(speech_inventory_menu)
 	$WhisperAudioPlayerQueue.commit()
 	debug_configure_audio_bus()
@@ -102,9 +105,8 @@ func alert_right_end_reached():
 		Input.start_joy_vibration (0, 0, .8, .2)
 
 func attempt_craft_with_marked_items():
-	var items_to_craft_indecies = get_items_to_craft_indecies()
 	var item_index = 0
-	var craft_result = get_craft_result(items_to_craft_indecies)
+	var craft_result = get_craft_result(marked_for_craft)
 	if craft_result:
 		issue_craft_success_feedback()
 		remove_crafted_items_from_inventory()
@@ -121,7 +123,10 @@ func close():
 
 # TODO: initialize consumption mechanic
 func consume_selected_item():
-	pass
+	if inventory.get_item_at_index(current_index).get_consume_value() == 0:
+		$WhisperAudioPlayerQueue.add_primary_stream(audio_consume_failed_sound)
+		$WhisperAudioPlayerQueue.commit()
+	$ConsumeSound.set_stream(inventory.get_consume_sound_at_index(current_index))
 
 func current_item_selected(end_reached=false):
 	if not inventory.is_empty():
@@ -171,7 +176,7 @@ func examine_selected_item():
 
 func get_craft_result(items_to_craft_indecies):
 	if items_to_craft_indecies:
-		var items_to_craft = get_items_to_craft(items_to_craft_indecies)
+		var items_to_craft = get_items_to_craft()
 
 		for craft_result in craft_mappings.keys():
 			for craft_mapping in craft_mappings[craft_result]:
@@ -181,21 +186,12 @@ func get_craft_result(items_to_craft_indecies):
 					return craft_result
 	return false
 
-func get_items_to_craft(items_to_craft_indecies):
+func get_items_to_craft():
 	var items_to_craft = []
-	for item_index in items_to_craft_indecies:
+	for item_index in marked_for_craft:
 		items_to_craft.append(inventory.get_type_at_index(item_index))
 	items_to_craft.sort()
 	return items_to_craft
-
-func get_items_to_craft_indecies():
-	var items_to_craft_indecies = []
-	var item_index = 0
-	while item_index < inventory.get_item_count():
-		if marked_for_craft[item_index]:
-			items_to_craft_indecies.append(item_index)
-		item_index = item_index + 1
-	return items_to_craft_indecies
 
 func issue_craft_failed_feedback():
 	$SimpleSFXQueue.add(audio_craft_failed_sound)
@@ -207,8 +203,8 @@ func list_free_spaces():
 	var index = 0
 	$WhisperAudioPlayerQueue.add_primary_stream(speech_free_spaces)
 	$WhisperAudioPlayerQueue.commit()
-	if inventory > 0:
-		while index < inventory.get_count_free_spaces():
+	if not inventory.is_empty():
+		while index < inventory.get_free_spaces_count():
 			$WhisperAudioPlayerQueue.add_primary_stream(audio_free_space)
 			$WhisperAudioPlayerQueue.commit()
 			index = index + 1
@@ -217,14 +213,12 @@ func list_free_spaces():
 		$WhisperAudioPlayerQueue.commit()
 			
 func list_items_marked_for_craft():
-	var index = 0
-
 	$WhisperAudioPlayerQueue.add_primary_stream(speech_marked_for_craft)
 	$WhisperAudioPlayerQueue.commit()
 	
 	if len(marked_for_craft) > 0:
 		for item_index in marked_for_craft:
-			$WhisperAudioPlayerQueue.add_primary_stream(inventory.get_name_to_speech_at_index(index))
+			$WhisperAudioPlayerQueue.add_primary_stream(inventory.get_name_to_speech_at_index(item_index))
 			$WhisperAudioPlayerQueue.commit()
 	else:
 		$WhisperAudioPlayerQueue.add_primary_stream(speech_none)
@@ -277,13 +271,16 @@ func navigate_to_item(direction):
 		else:
 			add_val = -1
 			
-	current_index = current_index + add_val
-	if inventory.has_multiple_items():
+	if inventory.has_multiple_items() and not end_reached:
 		$WhisperAudioPlayerQueue.add_primary_stream(audio_navigate_sound)
 		$WhisperAudioPlayerQueue.commit()
+	current_index = current_index + add_val
 	current_item_selected(end_reached)
 
 func on_CloseMenuSound_finished():
+	emit_signal("closed")
+
+func on_ConsumeSound_finished():
 	emit_signal("closed")
 
 func read_status():
@@ -292,14 +289,7 @@ func read_status():
 	list_items_marked_for_craft()
 
 func remove_crafted_items_from_inventory():
-	var cached_for_removal = []
-	var item_index = 0
-	while item_index < inventory.get_item_count():
-		if item_index in marked_for_craft:
-			cached_for_removal.append(item_index)
-		item_index = item_index + 1
-	for item_index in cached_for_removal:
-		inventory.remove_item_at_index(item_index)
+	inventory.remove_items_by_index(marked_for_craft)
 		
 func set_whisper_delay_left(delay):
 	$WhisperDelayLeft.wait_time = delay
