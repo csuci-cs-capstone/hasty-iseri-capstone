@@ -1,3 +1,2 @@
 # Audio Game Capstone
 
-We will be using a "giflow-like" work flow for this project. Individual "feature" branches will be used for each planned issue in our milestones. These will be worked on individually, then pushed up for review. Once reviewed, these will be merged into "Development", which is our long-running branch which contains code that should run but might require additional testing and review before 'release'. This will be merged into "Master" for every 'release' in which the state of the codebase has reached a milestone in completeness/ presentability (these releases should match up with the 4 presentation dates).
