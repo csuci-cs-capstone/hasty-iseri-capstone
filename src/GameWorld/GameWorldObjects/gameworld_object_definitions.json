@@ -6,8 +6,8 @@
           "name": null,
           "description": null,
           "identity_sound": null,
-          "consumption_sound": null,
-          "consumption_value": null,
+          "consume_sound": null,
+          "consume_value": null,
           "craft_mappings": []
       },
       "blue": {
@@ -58,14 +58,32 @@
           ]
       },
       "apple": {
-          "name": "speech_yellow.wav",
-          "description": "speech_yellow_description.wav",
-          "identity_sound": "",
-          "consumption_sound": "",
-          "consumption_value": 1,
+          "name": "speech_apple.wav",
+          "description": "speech_apple_description.wav",
+          "consume_sound": "apple-crunch-14.wav",
+          "consume_value": 1,
           "craft_mappings": [
             ["red", "green"]
           ]
+      },
+      "sticks": {
+          "name": "speech_sticks.wav",
+          "description": "speech_sticks_description.wav",
+          "consume_value": 0,
+          "craft_mappings": []
+      },
+      "stones": {
+          "name": "speech_stones.wav",
+          "description": "speech_stones_description.wav",
+          "consume_value": 0,
+          "craft_mappings": []
+      },
+      "axe": {
+          "name": "speech_axe.wav",
+          "description": "speech_axe_description.wav",
+          "identity_sound": "axe-chop-into-wood-little-debris.wav",
+          "consume_value": 0,
+          "craft_mappings": [ ["sticks", "stones"] ]
       }
     }
 }

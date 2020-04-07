@@ -60,6 +60,7 @@ func _physics_process(delta):
 			self.get_child(5).stop()
 			footsteps_playing = false
 			
+
 	
 	
 	
@@ -82,6 +83,7 @@ func interact():
 		sound.play()
 		yield(sound, "finished")
 		emit_signal("harvested_signal",i)
+
 		InteractList.erase(i)
 		
 			
