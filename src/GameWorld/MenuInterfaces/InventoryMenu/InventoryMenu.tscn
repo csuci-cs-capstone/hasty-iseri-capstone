@@ -34,3 +34,5 @@ volume_db = 2.0
 
 [node name="CloseMenuSound" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )
+
+[node name="ConsumeSound" type="AudioStreamPlayer" parent="."]

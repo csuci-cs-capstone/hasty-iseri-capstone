@@ -1,7 +1,7 @@
 extends Node
 class_name InventoryItem
 
-var type
+var type = "empty"
 var has_consume = false
 var consume_sound
 var consume_value
@@ -11,8 +11,7 @@ var description_to_speech
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	# TODO: implement audio resource loading; load all inventory item sounds here?
-	type = "empty"
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

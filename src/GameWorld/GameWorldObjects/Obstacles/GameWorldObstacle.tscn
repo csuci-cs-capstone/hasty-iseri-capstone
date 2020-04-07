@@ -2,6 +2,5 @@
 
 [ext_resource path="res://src/GameWorld/GameWorldObjects/Obstacles/GameWorldObstacle.gd" type="Script" id=1]
 
-
 [node name="GameWorldObstacle" type="Spatial"]
 script = ExtResource( 1 )
