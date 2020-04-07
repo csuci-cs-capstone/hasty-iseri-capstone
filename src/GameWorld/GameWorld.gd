@@ -83,7 +83,7 @@ func on_InventoryMenu_item_consumed(consume_value):
 
 func on_Obstacle_harvested(obstacle_type: String):
 	if not inventory.is_at_max_capacity():
-		inventory.add_from_type(obstacle_type)
+		inventory.add_item_from_resource_type(obstacle_type)
 
 func open_map_menu():
 	# TODO: load tactile map scene and configure data for:
@@ -99,11 +99,12 @@ func open_inventory_menu():
 	inventory_menu.connect("closed",self,"on_InventoryMenu_closed")
 	inventory_menu.connect("item_consumed",self,"on_InventoryMenu_item_consumed")
 	add_child(inventory_menu)
-	paused = true
+	pause_game()
 
 func pause_game():
 	paused = true
-	$world.pause_mode
+	$world/Player.paused = true
+	
 
 func populate_tactile_map_with_marker_data():
 	pass
