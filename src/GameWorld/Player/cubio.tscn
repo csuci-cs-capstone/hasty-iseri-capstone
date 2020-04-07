@@ -1,8 +1,7 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://src/GameWorld/Player/footstepdirt.tres" type="AudioStream" id=1]
 [ext_resource path="res://src/GameWorld/Player/Player.gd" type="Script" id=2]
-[ext_resource path="res://src/GameWorld/Player/follow_camera.gd" type="Script" id=3]
 [ext_resource path="res://src/GameWorld/Player/pickup.wav" type="AudioStream" id=4]
 
 [sub_resource type="SpatialMaterial" id=1]
@@ -50,10 +49,9 @@ shape = SubResource( 3 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.85165, 0 )
 
 [node name="camera" type="Camera" parent="target"]
-transform = Transform( 0.00880322, -0.305732, 0.952077, 0.00282677, 0.952118, 0.305719, -0.999957, -7.4509e-09, 0.00924594, 4.20469, 0.324667, -0.0203437 )
+transform = Transform( 0.00880322, -0.305732, 0.952077, 0.00282677, 0.952118, 0.305719, -0.999957, -7.4509e-09, 0.00924594, -0.252764, -1.22772, -0.0203437 )
 fov = 74.0
 near = 0.1
-script = ExtResource( 3 )
 
 [node name="EchoRange7" type="Area" parent="."]
 
