@@ -14,6 +14,7 @@ extents = Vector3( 1, 1.01251, 1 )
 [node name="Bush" type="Area"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.442783, 1.31248, 12.0776 )
 script = ExtResource( 2 )
+type = "bush"
 
 [node name="StaticBody" type="MeshInstance" parent="."]
 mesh = SubResource( 1 )

@@ -1,6 +1,20 @@
 {
   "artifacts": [],
-  "obstacles": [],
+  "obstacles": {
+	"tree":{
+		"identity_sound": "tree.wav",
+		"resource": "apple"
+	},
+	"boulder":{
+		"identity_sound": "rock.wav",
+		"resource": "stones"
+	},
+	"bush":{
+		"identity_sound": "bush.wav",
+		"resource": "sticks"
+	}
+	
+},
   "resources": {
       "null":{
           "name": null,

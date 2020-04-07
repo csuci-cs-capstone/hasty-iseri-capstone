@@ -13,6 +13,7 @@ data = PoolVector3Array( 0, 1, 0, 0, 1, 0, 0, 0.9955, 0.0951, 0, 1, 0, 0.0093, 0
 [node name="Boulder" type="Area"]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10.6567, 0.591944, 1.1419 )
 script = ExtResource( 2 )
+type = "boulder"
 
 [node name="StaticBody2" type="MeshInstance" parent="."]
 mesh = SubResource( 1 )

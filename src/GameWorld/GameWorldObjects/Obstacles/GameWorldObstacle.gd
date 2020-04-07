@@ -1,7 +1,7 @@
 extends Spatial
 
 var identity_sound
-var type
+export(String, "tree", "boulder", "bush") var type
 var resource
 
 # Called when the node enters the scene tree for the first time.

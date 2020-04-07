@@ -4,7 +4,8 @@
 [ext_resource path="res://src/GameWorld/GameWorldObjects/Obstacles/Boulder.tscn" type="PackedScene" id=2]
 [ext_resource path="res://src/GameWorld/Player/cubio.tscn" type="PackedScene" id=4]
 [ext_resource path="res://src/GameWorld/GameWorldObjects/Obstacles/Bush.tscn" type="PackedScene" id=5]
-[ext_resource path="res://src/GameWorld/GameWorldObjects/Resources/Tree.tscn" type="PackedScene" id=10]
+[ext_resource path="res://src/GameWorld/GameWorldObjects/Obstacles/Tree.tscn" type="PackedScene" id=10]
+
 
 [sub_resource type="ProceduralSky" id=1]
 radiance_size = 1

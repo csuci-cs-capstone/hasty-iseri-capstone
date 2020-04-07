@@ -12,7 +12,7 @@ var InteractList = []
 var footsteps_playing = false
 var previous_position
 var paused = false
-signal harvested_signal(obstacle)
+signal harvested(type)
 
 func _physics_process(delta):
 	if !paused:
@@ -82,7 +82,7 @@ func interact():
 		#TODO actual inventory system
 		sound.play()
 		yield(sound, "finished")
-		emit_signal("harvested_signal",i)
+		emit_signal("harvested",i.get_resource())
 
 		InteractList.erase(i)
 		
