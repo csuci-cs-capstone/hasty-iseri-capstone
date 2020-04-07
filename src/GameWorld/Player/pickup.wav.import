@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/stomp.wav-ef22484a1e58808caa94769af089f995.sample"
+path="res://.import/pickup.wav-de4940c7b1f7c6e1fec1c05ec5eb1300.sample"
 
 [deps]
 
-source_file="res://src/GameWorld/Player/stomp.wav"
-dest_files=[ "res://.import/stomp.wav-ef22484a1e58808caa94769af089f995.sample" ]
+source_file="res://src/GameWorld/Player/pickup.wav"
+dest_files=[ "res://.import/pickup.wav-de4940c7b1f7c6e1fec1c05ec5eb1300.sample" ]
 
 [params]
 

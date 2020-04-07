@@ -2,12 +2,12 @@
 
 importer="wav"
 type="AudioStreamSample"
-path="res://.import/leaves.wav-b1b92eec50becd3a619569e710a89245.sample"
+path="res://.import/leaves.wav-a84d1c4e8fde0b4d6c05a96efc549228.sample"
 
 [deps]
 
-source_file="res://leaves.wav"
-dest_files=[ "res://.import/leaves.wav-b1b92eec50becd3a619569e710a89245.sample" ]
+source_file="res://src/GameWorld/GameWorldObjects/Resources/leaves.wav"
+dest_files=[ "res://.import/leaves.wav-a84d1c4e8fde0b4d6c05a96efc549228.sample" ]
 
 [params]
 
