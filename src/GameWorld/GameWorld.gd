@@ -11,10 +11,11 @@ var InventoryMenu = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/Inven
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	load_object_configurations()
+	configure_gameworld_objects()
 	load_inventory()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+func _process(_delta):
 	if not paused:
 		if Input.is_action_just_pressed("gameworld_open_inventory_menu"):
 			open_inventory_menu()
@@ -25,7 +26,10 @@ func configure_gameworld_artifact(gameworld_object):
 	pass # TODO
 
 func configure_gameworld_objects():
-	var gameworld_objects = $Objects.get_children()
+	var gameworld_objects = $world.get_children()
+	
+	$world/Player.connect("harvested",self,"on_Obstacle_harvested")
+	
 	for gameworld_object in gameworld_objects:
 		if gameworld_object.is_in_group("artifacts"):
 			configure_gameworld_artifact(gameworld_object)
@@ -38,15 +42,23 @@ func configure_gameworld_objects():
 
 func configure_gameworld_obstacle(gameworld_obstacle):
 	var type = gameworld_obstacle.get_type()
-	gameworld_obstacle.connect("harvested",self,"on_Obstacle_harvested")
+	# DEBUG: have to do things like this for now
+	if "Tree" in gameworld_obstacle.name:
+		type = "tree"
+	elif "Boulder" in gameworld_obstacle.name:
+		type = "boulder"
+	elif "Bush" in gameworld_obstacle.name:
+		type = "bush"
+		
+	var RESOURCE_LOAD_PATH = "res://src/GameWorld/GameWorldObjects/Obstacles/"
 	var gameworld_obstacle_config = gameworld_object_configurations["obstacles"][type]
 	if gameworld_object_configurations["obstacles"][type].has("identity_sound"):
-		gameworld_obstacle.set_identity_sound(gameworld_obstacle_config["identity_sound"])
+		gameworld_obstacle.set_identity_sound(load(RESOURCE_LOAD_PATH + gameworld_obstacle_config["identity_sound"]))
 	if gameworld_object_configurations["obstacles"][type].has("resource"):
 		gameworld_obstacle.set_resource(gameworld_obstacle_config["resource"])
 	
 func configure_gameworld_resource(gameworld_object):
-	pass # T
+	pass # TODO
 
 func configure_gameworld_waypoint(gameworld_object):
 	pass # TODO
@@ -105,6 +117,8 @@ func open_inventory_menu():
 func pause_game():
 	paused = true
 	$world/Player.paused = true
+	if $world/Player/Footsteps.is_playing():
+		$world/Player/Footsteps.stop()
 	
 func populate_tactile_map_with_marker_data():
 	pass
