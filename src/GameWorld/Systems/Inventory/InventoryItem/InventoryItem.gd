@@ -3,7 +3,6 @@ class_name InventoryItem
 
 var type
 var has_consume = false
-
 var consume_sound
 var consume_value
 var identity_sound
