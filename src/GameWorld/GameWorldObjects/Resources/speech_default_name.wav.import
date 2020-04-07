@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/speech_default_name.wav-1afab0889d5dc37855288b3053aac98b.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/GameWorldObjects/Resources/speech_default_name.wav"
+dest_files=[ "res://.import/speech_default_name.wav-1afab0889d5dc37855288b3053aac98b.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

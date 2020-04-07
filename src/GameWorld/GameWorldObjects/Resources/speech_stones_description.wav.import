@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/speech_stones_description.wav-be7935345b7625143a1e71b83d70f8d6.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/GameWorldObjects/Resources/speech_stones_description.wav"
+dest_files=[ "res://.import/speech_stones_description.wav-be7935345b7625143a1e71b83d70f8d6.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

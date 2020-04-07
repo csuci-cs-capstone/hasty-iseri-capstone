@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/speech_placed.wav-b2ca8d9e442b1f00fe6ca4d7c3b78905.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/MenuInterfaces/MapMenu/speech_placed.wav"
+dest_files=[ "res://.import/speech_placed.wav-b2ca8d9e442b1f00fe6ca4d7c3b78905.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=false
+edit/loop=false
+compress/mode=0
