@@ -107,7 +107,7 @@ func load_items():
 	# TODO: load player inventory from serialized data in file system
 	inventory_items = []
 	# DEBUG: temporary item load
-	debug_load_items()
+	## debug_load_items()
 
 func remove_item_at_index(item_index):
 	if len(inventory_items) >= item_index:

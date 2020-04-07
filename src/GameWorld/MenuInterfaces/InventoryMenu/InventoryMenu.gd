@@ -105,7 +105,6 @@ func alert_right_end_reached():
 		Input.start_joy_vibration (0, 0, .8, .2)
 
 func attempt_craft_with_marked_items():
-	var item_index = 0
 	var craft_result = get_craft_result(marked_for_craft)
 	if craft_result:
 		issue_craft_success_feedback()

@@ -53,12 +53,10 @@ func _physics_process(delta):
 		vel.z = hvel.z
 	
 		vel = move_and_slide(vel, Vector3(0,1,0))
-		if ismoving() && !footsteps_playing:
-			self.get_child(5).play()
-			footsteps_playing = true
-		elif !ismoving() && footsteps_playing:
-			self.get_child(5).stop()
-			footsteps_playing = false
+		if ismoving() && not $Footsteps.is_playing():
+			$Footsteps.play()
+		elif !ismoving() && $Footsteps.is_playing():
+			$Footsteps.stop()
 			
 
 	
@@ -76,12 +74,12 @@ func echo():
 	
 
 func interact():
-	var sound = self.get_child(6)
+	var sound = $Pickup
 	for i in InteractList:
 		i.remove_from_group("harvestable")
 		#TODO actual inventory system
 		sound.play()
-		yield(sound, "finished")
+		#yield(sound, "finished")
 		emit_signal("harvested",i.get_resource())
 
 		InteractList.erase(i)
@@ -99,24 +97,33 @@ func ismoving():
 
 # add area to list of sounds to be echoed
 func _on_EchoRange7_area_entered(area):
-	if area.get_child(2):
-		if area.get_child(2).get_class() == "AudioStreamPlayer3D":
-			EchoList.append(area.get_child(2))
+	#if area.get_child(2):
+	#	if area.get_child(2).get_class() == "AudioStreamPlayer3D":
+	#		EchoList.append(area.get_child(2))
+	if area.has_node("AudioStreamPlayer3D"):
+		EchoList.append(area.get_node("AudioStreamPlayer3D"))
 # remove are from list of sounds to be echoed
 
 func _on_EchoRange7_area_exited(area):
-	if area.get_child(2):
-		if area.get_child(2).get_class() == "AudioStreamPlayer3D":
-			EchoList.erase(area.get_child(2))
+	#if area.get_child(2):
+	#	if area.get_child(2).get_class() == "AudioStreamPlayer3D":
+	#		EchoList.erase(area.get_child(2)esare)
+	if area.has_node("AudioStreamPlayer3D"):
+		EchoList.erase(area.get_node("AudioStreamPlayer3D"))
 
 
 func _on_WalkingEchoRange_area_entered(area):
-	if area.get_child(2):
-		if area.get_child(2).get_class() == "AudioStreamPlayer3D":
-			area.get_child(2).play()
-			if area.is_in_group("harvestable"):
-				print(area)
-				InteractList.append(area)
+	#if area.get_child(2):
+	#	if area.get_child(2).get_class() == "AudioStreamPlayer3D":
+	#		area.get_child(2).play()
+	#		if area.is_in_group("harvestable"):
+	#			print(area)
+	#			InteractList.append(area)
+	if area.has_node("AudioStreamPlayer3D"):
+		area.get_node("AudioStreamPlayer3D").play()
+		if area.is_in_group("harvestable"):
+			print(area)
+			InteractList.append(area)
 
 
 func _on_WalkingEchoRange_area_exited(area):
