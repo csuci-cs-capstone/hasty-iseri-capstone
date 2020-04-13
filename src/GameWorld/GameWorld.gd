@@ -42,14 +42,7 @@ func configure_gameworld_objects():
 
 func configure_gameworld_obstacle(gameworld_obstacle):
 	var type = gameworld_obstacle.get_type()
-	# DEBUG: have to do things like this for now
-	if "Tree" in gameworld_obstacle.name:
-		type = "tree"
-	elif "Boulder" in gameworld_obstacle.name:
-		type = "boulder"
-	elif "Bush" in gameworld_obstacle.name:
-		type = "bush"
-	
+
 	var RESOURCE_LOAD_PATH = "res://src/GameWorld/GameWorldObjects/Obstacles/"
 	var gameworld_obstacle_config = gameworld_object_configurations["obstacles"][type]
 	if gameworld_object_configurations["obstacles"][type].has("identity_sound"):
