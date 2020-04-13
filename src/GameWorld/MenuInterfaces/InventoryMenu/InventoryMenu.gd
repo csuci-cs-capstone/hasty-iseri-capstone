@@ -327,7 +327,7 @@ func toggle_current_item_craft_mark():
 		else:
 			$WhisperAudioPlayerQueue.add_primary_stream(audio_unmark_for_craft)
 			$WhisperAudioPlayerQueue.commit()
-
+	print(str(marked_for_craft))
 	$WhisperAudioPlayerQueue.add_primary_stream(inventory.get_name_to_speech_at_index(current_index))
 	$WhisperAudioPlayerQueue.commit()
 	
