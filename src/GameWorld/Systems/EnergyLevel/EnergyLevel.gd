@@ -48,7 +48,7 @@ func decrease(level_delta):
 func get_decrease_audio_feedback():
 	return audio_energy_decreased
 
-func get_energy_level():
+func get_level():
 	return energy_level
 
 func get_increase_audio_feedback():
@@ -79,6 +79,9 @@ func reset_magnitude_audio():
 	magnitude_feedback_timer = 0
 	magnitude_feedback_active = false
 	$MagnitudeAudio.position.x = 0
+
+func set_level(arg_level):
+	energy_level = arg_level
 
 func update(value):
 	if value > 0:

@@ -1,6 +1,7 @@
 extends Node
 
 const GAMEWORLD_OBJECT_CONFIG_PATH = "res://src/GameWorld/GameWorldObjects/gameworld_object_definitions.json"
+const DEFAULT_ENERGY_LEVEL = 5
 
 var paused = false
 var gameworld_object_configurations
@@ -8,11 +9,14 @@ var gameworld_resource_craft_mappings = {}
 var inventory
 
 var InventoryMenu = load("res://src/GameWorld/MenuInterfaces/InventoryMenu/InventoryMenu.tscn")
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	load_object_configurations()
 	configure_gameworld_objects()
 	load_inventory()
+	# TODO: load energy level from saved state or initialize at a default value
+	$EnergyLevel.set_level(DEFAULT_ENERGY_LEVEL)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
