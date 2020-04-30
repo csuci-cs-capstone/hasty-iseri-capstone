@@ -13,6 +13,11 @@ var footsteps_playing = false
 var previous_position
 var paused = false
 signal harvested(type)
+var name_to_speech = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_player.wav")
+
+
+func _ready():
+	add_to_group("player")
 
 func _physics_process(delta):
 	if !paused:
@@ -57,10 +62,6 @@ func _physics_process(delta):
 			$Footsteps.play()
 		elif !ismoving() && $Footsteps.is_playing():
 			$Footsteps.stop()
-			
-
-	
-	
 	
 func echo():
 	# play list of objects in that player body is in range of
@@ -69,9 +70,8 @@ func echo():
 			i.play()
 			yield(i, "finished")
 			
-			
-		
-	
+func get_name_to_speech():
+	return name_to_speech
 
 func interact():
 	var sound = $Pickup
@@ -83,8 +83,6 @@ func interact():
 		emit_signal("harvested",i.get_resource())
 
 		InteractList.erase(i)
-		
-			
 
 func ismoving():
 	var moving
@@ -93,7 +91,6 @@ func ismoving():
 	else:
 		moving = false
 	return moving
-	
 
 # add area to list of sounds to be echoed
 func _on_EchoRange7_area_entered(area):
@@ -111,7 +108,6 @@ func _on_EchoRange7_area_exited(area):
 	if area.has_node("AudioStreamPlayer3D"):
 		EchoList.erase(area.get_node("AudioStreamPlayer3D"))
 
-
 func _on_WalkingEchoRange_area_entered(area):
 	#if area.get_child(2):
 	#	if area.get_child(2).get_class() == "AudioStreamPlayer3D":
@@ -125,8 +121,10 @@ func _on_WalkingEchoRange_area_entered(area):
 			print(area)
 			InteractList.append(area)
 
-
 func _on_WalkingEchoRange_area_exited(area):
 	if area.is_in_group("harvestable"):
 		InteractList.erase(area)
 	pass # Replace with function body.
+
+func set_name_to_speech(arg_stream):
+	name_to_speech = arg_stream

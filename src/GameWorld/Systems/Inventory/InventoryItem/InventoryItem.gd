@@ -1,8 +1,7 @@
 extends Node
 class_name InventoryItem
 
-var type = "empty"
-var has_consume = false
+var type = null
 var consume_sound
 var consume_value
 var identity_sound
@@ -53,6 +52,6 @@ func set_identity_sound(arg_identity_sound):
 func set_name_to_speech(arg_name_to_speech):
 	name_to_speech = arg_name_to_speech
 	
-func set_type(arg_type="empty"):
+func set_type(arg_type=null):
 	self.type = arg_type
 
