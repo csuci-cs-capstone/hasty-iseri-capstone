@@ -2,6 +2,10 @@
 
 [ext_resource path="res://src/GameWorld/Player/footstepdirt.tres" type="AudioStream" id=1]
 [ext_resource path="res://src/GameWorld/Player/Player.gd" type="Script" id=2]
+<<<<<<< Updated upstream
+=======
+[ext_resource path="res://src/GameWorld/Player/follow_camera.gd" type="Script" id=3]
+>>>>>>> Stashed changes
 [ext_resource path="res://src/GameWorld/Player/pickup.wav" type="AudioStream" id=4]
 
 [sub_resource type="SpatialMaterial" id=1]

@@ -98,7 +98,11 @@ func _on_EchoRange7_area_entered(area):
 	#	if area.get_child(2).get_class() == "AudioStreamPlayer3D":
 	#		EchoList.append(area.get_child(2))
 	if area.has_node("AudioStreamPlayer3D"):
+<<<<<<< Updated upstream
 		EchoList.append(area.get_node("AudioStreamPlayer3D"))
+=======
+		EchoList.append(area.get_child(2))
+>>>>>>> Stashed changes
 # remove are from list of sounds to be echoed
 
 func _on_EchoRange7_area_exited(area):
@@ -120,6 +124,10 @@ func _on_WalkingEchoRange_area_entered(area):
 		if area.is_in_group("harvestable"):
 			print(area)
 			InteractList.append(area)
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 
 func _on_WalkingEchoRange_area_exited(area):
 	if area.is_in_group("harvestable"):
