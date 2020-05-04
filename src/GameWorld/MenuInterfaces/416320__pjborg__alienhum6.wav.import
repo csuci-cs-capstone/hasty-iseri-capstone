@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/416320__pjborg__alienhum6.wav-b2df69e6822d689d0bc9124dc4e522d6.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/MenuInterfaces/416320__pjborg__alienhum6.wav"
+dest_files=[ "res://.import/416320__pjborg__alienhum6.wav-b2df69e6822d689d0bc9124dc4e522d6.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=false
+edit/loop=true
+compress/mode=0
