@@ -133,6 +133,11 @@ func on_MapMenu_closed():
 func on_InventoryMenu_item_consumed(consume_value):
 	$EnergyLevel.update(consume_value)
 
+func on_MapMenu_waypoint_placed(marker_position):
+	# waypoint.translation.x = ($Crosshair.position.x / 1280) * 52 - 30  # TODO
+	# waypoint.translation.z = ($Crosshair.position.y /720) * 58 - 36  # TODO
+	pass
+
 func on_Obstacle_harvested(resource_type: String):
 	if not inventory.is_at_max_capacity():
 		# TODO: implement process for deleting resource associated with obstacle
