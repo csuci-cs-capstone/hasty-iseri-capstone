@@ -15,7 +15,6 @@ var MapMenu = load("res://src/GameWorld/MenuInterfaces/MapMenu/MapMenu.tscn")
 var GameWorldResource = load("res://src/GameWorld/GameWorldObjects/Resources/GameWorldResource.tscn")
 var GameWorldWaypoint= load("res://src/GameWorld/GameWorldObjects/Waypoints/GameWorldWaypoint.tscn")
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	load_object_configurations()

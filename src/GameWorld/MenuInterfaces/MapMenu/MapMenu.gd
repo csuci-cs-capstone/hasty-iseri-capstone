@@ -37,12 +37,14 @@ var map_dimensions = {"x": 100, "y": 100}
 var current_waypoint_index = 0
 var waypoint_just_placed = false
 var marker_detected_by_sweepline = false
+var snapped_to = false
 
 #DEBUG
 var speech_map_menu = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_map_menu.wav")
 var speech_placed = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_placed.wav")
-var speech_position = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_player_position.wav")
-var speech_selected = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_position.wav")
+var speech_position = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_position.wav")
+var speech_selected = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_selected.wav")
+var speech_player = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_player.wav")
 
 var HorizontalGridline = load("res://src/GameWorld/MenuInterfaces/MapMenu/HorizontalGridline.tscn")
 var VerticalGridline = load("res://src/GameWorld/MenuInterfaces/MapMenu/VerticalGridline.tscn")
@@ -61,8 +63,6 @@ func _ready():
 	sweepline_y = get_node("VerticalSweepline")
 	crosshair = get_node("Crosshair")
 	
-	sweepline_x.position.y = y_min+1
-	sweepline_y.position.x = x_min+1
 	sweep_velocity = Vector2(x_max/SWEEP_CONST, y_max/SWEEP_CONST)
 	
 	$MarkerAudioQueue.add(speech_map_menu)
@@ -72,7 +72,16 @@ func _ready():
 	
 	load_marker_data()
 	current_waypoint_selected()
-			
+	
+	if markers["player"]:
+		sweepline_x.position.y = markers["player"][0].position.y 
+		sweepline_y.position.x = markers["player"][0].position.x 
+	else:
+		sweepline_x.position.y = y_min+1
+		sweepline_y.position.x = x_min+1
+	
+	snapped_to = true
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if Input.is_action_pressed("menu_ui_right") and sweepline_y.position.x < x_max:
@@ -217,30 +226,39 @@ func on_VerticalGridline_entered(area_id, source):
 		source.get_node("AudioMidline").play()
 	
 func on_Marker_area_entered(area_id, marker, object):
-	if marker.get_can_detect():
-		if area_id == crosshair and not waypoint_just_placed:
-			$MarkerAudioQueue.add(object.get_name_to_speech())
-			Input.start_joy_vibration (0, 1, .4, .16)
+	if marker.get_can_detect() and not marker in markers["waypoints"]:  # TODO: can detect check may not be needed
+		if area_id == crosshair:
+			if not waypoint_just_placed and not snapped_to:
+				$MarkerAudioQueue.add(object.get_name_to_speech())
+				Input.start_joy_vibration (0, 1, .4, .16)
 		elif area_id == sweepline_x:
 			Input.start_joy_vibration (0, .4, 0, .16)
 		elif area_id == sweepline_y:
 			Input.start_joy_vibration (0, .4, 0, .16)
 	
-func on_Marker_area_exited(area_id):
+func on_Marker_area_exited(area_id, marker, object):
 	if area_id == crosshair:
 		waypoint_just_placed = false
+		snapped_to = false
 
 func set_map_dimensions(arg_dim):
 	map_dimensions = arg_dim
 
 #TODO: add functionality
 func snap_to_player_marker_position():
+	snapped_to = true
+	$MarkerAudioQueue.add(markers["player"][0].get_associated_object().get_name_to_speech())
+	$MarkerAudioQueue.add(speech_position)
 	$VerticalSweepline.position.x = markers["player"][0].get_position().x
 	$HorizontalSweepline.position.y = markers["player"][0].get_position().y
 
 #TODO: add functionality
 func snap_to_waypoint_marker_position():
+	snapped_to = true
 	if markers["waypoints"][current_waypoint_index].get_can_detect():
+		$MarkerAudioQueue.add(markers["waypoints"][current_waypoint_index].get_associated_object() \
+		  .get_name_to_speech())
+		$MarkerAudioQueue.add(speech_position)
 		$VerticalSweepline.position.x = markers["waypoints"][current_waypoint_index].position.x
 		$HorizontalSweepline.position.y = markers["waypoints"][current_waypoint_index].position.y
 
