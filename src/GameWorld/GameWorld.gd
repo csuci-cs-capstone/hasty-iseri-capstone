@@ -58,6 +58,7 @@ func configure_gameworld_obstacle():
 			var new_resource = GameWorldResource.instance()
 			new_resource.set_type(gameworld_object_configurations["obstacles"][type]["resource"])
 			new_resource.add_to_group("resources")
+			new_resource.translation = gameworld_obstacle.translation
 			gameworld_obstacle.add_child(new_resource)
 	
 func configure_gameworld_resource():
@@ -142,7 +143,7 @@ func open_map_menu():
 	var map_menu = MapMenu.instance()
 	map_menu.connect("closed",self,"on_MapMenu_closed")
 	map_menu.connect("waypoint_placed",self,"on_MapMenu_waypoint_placed")
-	map_menu.set_map_dimensions({"x": $GridMap.cell_size.x, "y": $GridMap.cell_size.z})
+	#map_menu.set_map_dimensions({"x": $GridMap.cell_size.x, "y": $GridMap.cell_size.z})
 	add_child(map_menu)
 	pause_game()
 
@@ -157,13 +158,13 @@ func open_inventory_menu():
 
 func pause_game():
 	paused = true
-	$Player.paused = true
-	if $Player/Footsteps.is_playing():
-		$Player/Footsteps.stop()
+	$Map/Player.paused = true
+	if $Map/Player/Footsteps.is_playing():
+		$Map/Player/Footsteps.stop()
 	
 func populate_tactile_map_with_marker_data():
 	pass
 
 func unpause_game():
 	paused = false
-	$Player.paused = false
+	$Map/Player.paused = false

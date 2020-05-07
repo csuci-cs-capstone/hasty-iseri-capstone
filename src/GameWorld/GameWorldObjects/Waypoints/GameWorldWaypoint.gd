@@ -10,6 +10,9 @@ func _ready():
 func get_name_to_speech():
 	return name_to_speech
 
+func get_spawned():
+	return spawned
+
 func set_name_to_speech(stream):
 	name_to_speech = stream
 	

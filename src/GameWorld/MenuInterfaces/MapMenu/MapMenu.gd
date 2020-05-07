@@ -145,7 +145,11 @@ func load_marker_data():
 	for marker_type in marker_types:
 		if get_tree().has_group(marker_type):
 			for object in get_tree().get_nodes_in_group(marker_type):
-				markers[marker_type].append(make_marker_type_from_object(marker_type, object))
+				if marker_type == "waypoints":
+					if not object.get_spawned():
+						continue
+				var marker = make_marker_type_from_object(marker_type, object)
+				markers[marker_type].append(marker)
 		else:
 			markers[marker_type] = null
 			print("ERROR: could not load marker")
@@ -169,11 +173,16 @@ func make_marker_type_from_object(marker_type, object):
 	new_marker.set_associated_object(object)
 	new_marker.connect("area_entered",self,"on_Marker_area_entered", [object])
 	new_marker.connect("area_exited",self,"on_Marker_area_exited", [object])
+	print(str(object.name) + ": x=" + str(object.translation.x) + " z=" + str(object.translation.z))
+	#new_marker.position.x = (object.translation.x / map_dimensions["x"]) * 1280  # TODO: replace with screen resolution
+	#new_marker.position.y = (object.translation.z / map_dimensions["y"]) * 720   # TODO: replace with screen resolution
+	#new_marker.position.x = (object.translation.x / 22) * 1280  # TODO: replace with screen resolution
+	#new_marker.position.y = (object.translation.z / 28) * 720   # TODO: replace with screen resolution
+	new_marker.position.x = ((object.get_translation().x + 30) / 52) * 1280
+	new_marker.position.y = ((object.get_translation().z + 36) / 58) * 720
+	print(str(new_marker.name) + ": x=" + str(new_marker.position.x) + " y=" + str(new_marker.position.y))
+
 	add_child(new_marker)
-	new_marker.position.x = (object.translation.x / map_dimensions["x"]) * 1280  # TODO: replace with screen resolution
-	new_marker.position.y = (object.translation.z / map_dimensions["y"]) * 720   # TODO: replace with screen resolution
-	#new_marker.position.x = object.translation.x # TODO: replace with screen resolution
-	#new_marker.position.y = object.translation.z # TODO: replace with screen resolution
 	return new_marker
 
 func navigate_to_waypoint(direction):
