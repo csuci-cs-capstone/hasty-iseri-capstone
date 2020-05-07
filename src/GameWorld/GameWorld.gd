@@ -38,6 +38,7 @@ func configure_gameworld_artifact():
 	pass # TODO
 
 func configure_gameworld_objects():
+	$Map/Player.connect("obstacle_harvested", self, "on_Obstacle_harvested")
 	configure_gameworld_artifact()
 	configure_gameworld_obstacle()
 	configure_gameworld_resource()
@@ -48,7 +49,7 @@ func configure_gameworld_obstacle():
 		var type = gameworld_obstacle.get_type()
 		var LOAD_PATH = "res://src/GameWorld/GameWorldObjects/Obstacles/"
 		var gameworld_obstacle_config = gameworld_object_configurations["obstacles"][type]
-		
+
 		if gameworld_obstacle_config.has("identity_sound"):
 			gameworld_obstacle.set_identity_sound(load(LOAD_PATH + gameworld_obstacle_config["identity_sound"]))
 		if gameworld_obstacle_config.has("resource"):
@@ -59,7 +60,7 @@ func configure_gameworld_obstacle():
 			new_resource.add_to_group("resources")
 			new_resource.translation = gameworld_obstacle.translation
 			gameworld_obstacle.add_child(new_resource)
-	
+
 func configure_gameworld_resource():
 	for gameworld_resource in get_tree().get_nodes_in_group("resources"):
 		var type = gameworld_resource.get_type()
@@ -137,10 +138,15 @@ func on_MapMenu_waypoint_placed(marker_position):
 	# waypoint.translation.z = ($Crosshair.position.y /720) * 58 - 36  # TODO
 	pass
 
-func on_Obstacle_harvested(resource_type: String):
+func on_Obstacle_harvested(obstacle, resource):
 	if not inventory.is_at_max_capacity():
-		# TODO: implement process for deleting resource associated with obstacle
+		var resource_type = resource.get_type()
 		inventory.add_item_from_resource_type(resource_type)
+		obstacle.remove_from_group("harvestable")
+		resource.queue_free()
+		$Map/Player/Pickup.play()
+	else:
+		$Map/Player/RejectPickup.play()
 
 func open_map_menu():
 	# TODO: load tactile map scene and configure data for:
