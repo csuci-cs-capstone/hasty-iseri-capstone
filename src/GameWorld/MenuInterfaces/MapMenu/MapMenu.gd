@@ -181,7 +181,8 @@ func make_marker_type_from_object(marker_type, object):
 	new_marker.position.x = ((object.get_translation().x + 30) / 52) * 1280
 	new_marker.position.y = ((object.get_translation().z + 36) / 58) * 720
 	print(str(new_marker.name) + ": x=" + str(new_marker.position.x) + " y=" + str(new_marker.position.y))
-
+	if marker_type == "player":
+		new_marker.get_node("DeveloperVisual").texture = load("res://src/GameWorld/MenuInterfaces/green.png")
 	add_child(new_marker)
 	return new_marker
 
@@ -235,8 +236,8 @@ func set_map_dimensions(arg_dim):
 
 #TODO: add functionality
 func snap_to_player_marker_position():
-	$VerticalSweepline.position.x = markers["player"].position.x
-	$HorizontalSweepline.position.y = markers["player"].position.y
+	$VerticalSweepline.position.x = markers["player"][0].get_position().x
+	$HorizontalSweepline.position.y = markers["player"][0].get_position().y
 
 #TODO: add functionality
 func snap_to_waypoint_marker_position():

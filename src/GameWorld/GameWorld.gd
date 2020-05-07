@@ -135,6 +135,7 @@ func on_InventoryMenu_item_consumed(consume_value):
 
 func on_Obstacle_harvested(resource_type: String):
 	if not inventory.is_at_max_capacity():
+		# TODO: implement process for deleting resource associated with obstacle
 		inventory.add_item_from_resource_type(resource_type)
 
 func open_map_menu():
