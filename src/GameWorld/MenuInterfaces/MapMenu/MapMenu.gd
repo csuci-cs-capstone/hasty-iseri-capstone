@@ -226,7 +226,7 @@ func on_VerticalGridline_entered(area_id, source):
 		source.get_node("AudioMidline").play()
 	
 func on_Marker_area_entered(area_id, marker, object):
-	if marker.get_can_detect() and not marker in markers["waypoints"]:  # TODO: can detect check may not be needed
+	if marker.get_can_detect():  # TODO: can detect check may not be needed
 		if area_id == crosshair:
 			if not waypoint_just_placed and not snapped_to:
 				$MarkerAudioQueue.add(object.get_name_to_speech())

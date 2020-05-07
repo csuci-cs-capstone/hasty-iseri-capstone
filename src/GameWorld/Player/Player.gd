@@ -12,7 +12,7 @@ var InteractList = []
 var footsteps_playing = false
 var previous_position
 var paused = false
-signal harvested(type)
+signal obstacle_harvested(obstacle, resource)
 var name_to_speech = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_player.wav")
 
 
@@ -74,15 +74,12 @@ func get_name_to_speech():
 	return name_to_speech
 
 func interact():
-	var sound = $Pickup
-	for i in InteractList:
-		i.remove_from_group("harvestable")
-		#TODO actual inventory system
-		sound.play()
-		#yield(sound, "finished")
-		emit_signal("harvested",i.get_resource())
-
-		InteractList.erase(i)
+	for obstacle in InteractList:
+		var children = obstacle.get_children()
+		for child in children:
+			if child.is_in_group("resources"):
+				emit_signal("obstacle_harvested", obstacle, child)
+		# InteractList.erase(obstacle) # TODO: decide how to handle this
 
 func ismoving():
 	var moving

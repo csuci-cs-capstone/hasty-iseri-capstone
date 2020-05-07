@@ -1,10 +1,8 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://src/GameWorld/Player/footstepdirt.tres" type="AudioStream" id=1]
 [ext_resource path="res://src/GameWorld/Player/Player.gd" type="Script" id=2]
-
-[ext_resource path="res://src/GameWorld/Player/follow_camera.gd" type="Script" id=3]
-
+[ext_resource path="res://src/GameWorld/MenuInterfaces/InventoryMenu/141334__lluiset7__error-2.wav" type="AudioStream" id=3]
 [ext_resource path="res://src/GameWorld/Player/pickup.wav" type="AudioStream" id=4]
 
 [sub_resource type="SpatialMaterial" id=1]
@@ -74,6 +72,9 @@ stream = ExtResource( 4 )
 
 [node name="Pickup" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )
+
+[node name="RejectPickup" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
 [connection signal="area_entered" from="EchoRange7" to="." method="_on_EchoRange7_area_entered"]
 [connection signal="area_exited" from="EchoRange7" to="." method="_on_EchoRange7_area_exited"]
 [connection signal="area_entered" from="WalkingEchoRange" to="." method="_on_WalkingEchoRange_area_entered"]
