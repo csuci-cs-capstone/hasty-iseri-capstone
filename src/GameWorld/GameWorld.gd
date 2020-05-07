@@ -15,7 +15,6 @@ var MapMenu = load("res://src/GameWorld/MenuInterfaces/MapMenu/MapMenu.tscn")
 var GameWorldResource = load("res://src/GameWorld/GameWorldObjects/Resources/GameWorldResource.tscn")
 var GameWorldWaypoint= load("res://src/GameWorld/GameWorldObjects/Waypoints/GameWorldWaypoint.tscn")
 
-
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	load_object_configurations()
@@ -58,6 +57,7 @@ func configure_gameworld_obstacle():
 			var new_resource = GameWorldResource.instance()
 			new_resource.set_type(gameworld_object_configurations["obstacles"][type]["resource"])
 			new_resource.add_to_group("resources")
+			new_resource.translation = gameworld_obstacle.translation
 			gameworld_obstacle.add_child(new_resource)
 	
 func configure_gameworld_resource():
@@ -132,8 +132,14 @@ func on_MapMenu_closed():
 func on_InventoryMenu_item_consumed(consume_value):
 	$EnergyLevel.update(consume_value)
 
+func on_MapMenu_waypoint_placed(marker_position):
+	# waypoint.translation.x = ($Crosshair.position.x / 1280) * 52 - 30  # TODO
+	# waypoint.translation.z = ($Crosshair.position.y /720) * 58 - 36  # TODO
+	pass
+
 func on_Obstacle_harvested(resource_type: String):
 	if not inventory.is_at_max_capacity():
+		# TODO: implement process for deleting resource associated with obstacle
 		inventory.add_item_from_resource_type(resource_type)
 
 func open_map_menu():
@@ -142,7 +148,7 @@ func open_map_menu():
 	var map_menu = MapMenu.instance()
 	map_menu.connect("closed",self,"on_MapMenu_closed")
 	map_menu.connect("waypoint_placed",self,"on_MapMenu_waypoint_placed")
-	map_menu.set_map_dimensions({"x": $GridMap.cell_size.x, "y": $GridMap.cell_size.z})
+	#map_menu.set_map_dimensions({"x": $GridMap.cell_size.x, "y": $GridMap.cell_size.z})
 	add_child(map_menu)
 	pause_game()
 
@@ -157,13 +163,13 @@ func open_inventory_menu():
 
 func pause_game():
 	paused = true
-	$Player.paused = true
-	if $Player/Footsteps.is_playing():
-		$Player/Footsteps.stop()
+	$Map/Player.paused = true
+	if $Map/Player/Footsteps.is_playing():
+		$Map/Player/Footsteps.stop()
 	
 func populate_tactile_map_with_marker_data():
 	pass
 
 func unpause_game():
 	paused = false
-	$Player.paused = false
+	$Map/Player.paused = false

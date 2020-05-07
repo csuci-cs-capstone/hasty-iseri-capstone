@@ -37,12 +37,14 @@ var map_dimensions = {"x": 100, "y": 100}
 var current_waypoint_index = 0
 var waypoint_just_placed = false
 var marker_detected_by_sweepline = false
+var snapped_to = false
 
 #DEBUG
 var speech_map_menu = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_map_menu.wav")
 var speech_placed = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_placed.wav")
-var speech_position = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_player_position.wav")
-var speech_selected = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_position.wav")
+var speech_position = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_position.wav")
+var speech_selected = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_selected.wav")
+var speech_player = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_player.wav")
 
 var HorizontalGridline = load("res://src/GameWorld/MenuInterfaces/MapMenu/HorizontalGridline.tscn")
 var VerticalGridline = load("res://src/GameWorld/MenuInterfaces/MapMenu/VerticalGridline.tscn")
@@ -61,8 +63,6 @@ func _ready():
 	sweepline_y = get_node("VerticalSweepline")
 	crosshair = get_node("Crosshair")
 	
-	sweepline_x.position.y = y_min+1
-	sweepline_y.position.x = x_min+1
 	sweep_velocity = Vector2(x_max/SWEEP_CONST, y_max/SWEEP_CONST)
 	
 	$MarkerAudioQueue.add(speech_map_menu)
@@ -72,7 +72,16 @@ func _ready():
 	
 	load_marker_data()
 	current_waypoint_selected()
-			
+	
+	if markers["player"]:
+		sweepline_x.position.y = markers["player"][0].position.y 
+		sweepline_y.position.x = markers["player"][0].position.x 
+	else:
+		sweepline_x.position.y = y_min+1
+		sweepline_y.position.x = x_min+1
+	
+	snapped_to = true
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
 	if Input.is_action_pressed("menu_ui_right") and sweepline_y.position.x < x_max:
@@ -145,7 +154,8 @@ func load_marker_data():
 	for marker_type in marker_types:
 		if get_tree().has_group(marker_type):
 			for object in get_tree().get_nodes_in_group(marker_type):
-				markers[marker_type].append(make_marker_type_from_object(marker_type, object))
+				var marker = make_marker_type_from_object(marker_type, object)
+				markers[marker_type].append(marker)
 		else:
 			markers[marker_type] = null
 			print("ERROR: could not load marker")
@@ -167,13 +177,20 @@ func issue_vertical_border_feedback():
 func make_marker_type_from_object(marker_type, object):
 	var new_marker = Marker.instance()
 	new_marker.set_associated_object(object)
-	new_marker.connect("area_entered",self,"on_Marker_area_entered", [object])
-	new_marker.connect("area_exited",self,"on_Marker_area_exited", [object])
+	new_marker.connect("area_entered",self,"on_Marker_area_entered", [new_marker, object])
+	new_marker.connect("area_exited",self,"on_Marker_area_exited", [new_marker, object])
+	new_marker.position.x = ((object.get_translation().x + 30) / 52) * 1280  # TODO: replace with screen resolution
+	new_marker.position.y = ((object.get_translation().z + 36) / 58) * 720  # TODO: replace with screen resolution
+	if marker_type == "player":
+		new_marker.get_node("DeveloperVisual").texture = load("res://src/GameWorld/MenuInterfaces/blue.png")  # DEBUG
+	elif marker_type == "waypoints":
+		new_marker.get_node("DeveloperVisual").texture = load("res://src/GameWorld/MenuInterfaces/green.png")  # DEBUG
+		if not object.get_spawned():
+			new_marker.position.x = -50  # TODO
+			new_marker.position.y = -50  # TODO
+			new_marker.set_can_detect(false)
+		
 	add_child(new_marker)
-	new_marker.position.x = (object.translation.x / map_dimensions["x"]) * 1280  # TODO: replace with screen resolution
-	new_marker.position.y = (object.translation.z / map_dimensions["y"]) * 720   # TODO: replace with screen resolution
-	#new_marker.position.x = object.translation.x # TODO: replace with screen resolution
-	#new_marker.position.y = object.translation.z # TODO: replace with screen resolution
 	return new_marker
 
 func navigate_to_waypoint(direction):
@@ -208,31 +225,42 @@ func on_VerticalGridline_entered(area_id, source):
 			Input.start_joy_vibration (0, .4, 0, .1)
 		source.get_node("AudioMidline").play()
 	
-func on_Marker_area_entered(area_id, source):
-	if area_id == crosshair and not waypoint_just_placed:
-		$MarkerAudioQueue.add(source.get_name_to_speech())
-		Input.start_joy_vibration (0, 1, .4, .16)
-	elif area_id == sweepline_x:
-		Input.start_joy_vibration (0, .4, 0, .16)
-	elif area_id == sweepline_y:
-		Input.start_joy_vibration (0, .4, 0, .16)
+func on_Marker_area_entered(area_id, marker, object):
+	if marker.get_can_detect() and not marker in markers["waypoints"]:  # TODO: can detect check may not be needed
+		if area_id == crosshair:
+			if not waypoint_just_placed and not snapped_to:
+				$MarkerAudioQueue.add(object.get_name_to_speech())
+				Input.start_joy_vibration (0, 1, .4, .16)
+		elif area_id == sweepline_x:
+			Input.start_joy_vibration (0, .4, 0, .16)
+		elif area_id == sweepline_y:
+			Input.start_joy_vibration (0, .4, 0, .16)
 	
-func on_Marker_area_exited(area_id):
+func on_Marker_area_exited(area_id, marker, object):
 	if area_id == crosshair:
 		waypoint_just_placed = false
+		snapped_to = false
 
 func set_map_dimensions(arg_dim):
 	map_dimensions = arg_dim
 
 #TODO: add functionality
 func snap_to_player_marker_position():
-	$VerticalSweepline.position.x = markers["player"].position.x
-	$HorizontalSweepline.position.y = markers["player"].position.y
+	snapped_to = true
+	$MarkerAudioQueue.add(markers["player"][0].get_associated_object().get_name_to_speech())
+	$MarkerAudioQueue.add(speech_position)
+	$VerticalSweepline.position.x = markers["player"][0].get_position().x
+	$HorizontalSweepline.position.y = markers["player"][0].get_position().y
 
 #TODO: add functionality
 func snap_to_waypoint_marker_position():
-	$VerticalSweepline.position.x = markers["waypoints"][current_waypoint_index].position.x
-	$HorizontalSweepline.position.y = markers["waypoints"][current_waypoint_index].position.y
+	snapped_to = true
+	if markers["waypoints"][current_waypoint_index].get_can_detect():
+		$MarkerAudioQueue.add(markers["waypoints"][current_waypoint_index].get_associated_object() \
+		  .get_name_to_speech())
+		$MarkerAudioQueue.add(speech_position)
+		$VerticalSweepline.position.x = markers["waypoints"][current_waypoint_index].position.x
+		$HorizontalSweepline.position.y = markers["waypoints"][current_waypoint_index].position.y
 
 func spawn_horizontal_gridlines():
 	gridline_y_delta = y_max / number_of_gridlines.y
@@ -253,13 +281,16 @@ func spawn_vertical_gridlines():
 # TODO: add functionality, pass waypoint data through signal so corresponding object can be created/ updated
 func update_selected_waypoint():
 	if markers["waypoints"]:
-		emit_signal("waypoint_placed")
+		emit_signal("waypoint_placed", $Crosshair.position)
 		var waypoint = markers["waypoints"][current_waypoint_index].get_associated_object()
 		$MarkerAudioQueue.stop_and_clear()
 		$MarkerAudioQueue.add(waypoint.get_name_to_speech())
 		$MarkerAudioQueue.add(speech_placed)
-		waypoint.translation.x = $Crosshair.position.x
-		waypoint.translation.z = $Crosshair.position.y
+		if not markers["waypoints"][current_waypoint_index].get_can_detect():
+			markers["waypoints"][current_waypoint_index].set_can_detect(true)
+			waypoint.set_spawned(true)
+		waypoint.translation.x = ($Crosshair.position.x / 1280) * 52 - 30  # TODO
+		waypoint.translation.z = ($Crosshair.position.y /720) * 58 - 36  # TODO
 		markers["waypoints"][current_waypoint_index].position = $Crosshair.position
 		waypoint_just_placed = true
 	else:
