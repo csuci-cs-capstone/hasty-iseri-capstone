@@ -17,6 +17,12 @@ signal harvested(type)
 onready var head = $Head
 onready var camera = $Head/Camera
 var camera_x_rotation = 0
+signal obstacle_harvested(obstacle, resource)
+var name_to_speech = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_player.wav")
+
+
+func _ready():
+	add_to_group("player")
 
 func _input(event):
 	if !paused:
@@ -49,57 +55,47 @@ func _physics_process(delta):
 			$Compass.play()
 		dir.y = 0
 		dir = dir.normalized()
-	
+
 		vel.y += delta * g
-	
+
 		var hvel = vel
 		hvel.y = 0
-	
+
 		var target = dir * MAX_SPEED
 		var accel
 		if dir.dot(hvel) > 0:
 			accel = ACCEL
 		else:
 			accel = DEACCEL
-	
+
 		hvel = hvel.linear_interpolate(target, accel * delta)
-	
+
 		vel.x = hvel.x
 		vel.z = hvel.z
-	
+
 		vel = move_and_slide(vel, Vector3(0,1,0))
 		if ismoving() && not $Footsteps.is_playing():
 			$Footsteps.play()
 		elif !ismoving() && $Footsteps.is_playing():
 			$Footsteps.stop()
-			
 
-	
-	
-	
 func echo():
 	# play list of objects in that player body is in range of
 	for i in EchoList:
 		if i:
 			i.play()
 			yield(i, "finished")
-			
-			
-		
-	
+
+func get_name_to_speech():
+	return name_to_speech
 
 func interact():
-	var sound = $Pickup
-	for i in InteractList:
-		i.remove_from_group("harvestable")
-		#TODO actual inventory system
-		sound.play()
-		#yield(sound, "finished")
-		emit_signal("harvested",i.get_resource())
-
-		InteractList.erase(i)
-		
-			
+	for obstacle in InteractList:
+		var children = obstacle.get_children()
+		for child in children:
+			if child.is_in_group("resources"):
+				emit_signal("obstacle_harvested", obstacle, child)
+		# InteractList.erase(obstacle) # TODO: decide how to handle this
 
 func ismoving():
 	var moving
@@ -108,7 +104,6 @@ func ismoving():
 	else:
 		moving = false
 	return moving
-	
 
 # add area to list of sounds to be echoed
 func _on_EchoRange7_area_entered(area):
@@ -126,7 +121,6 @@ func _on_EchoRange7_area_exited(area):
 	if area.has_node("AudioStreamPlayer3D"):
 		EchoList.erase(area.get_node("AudioStreamPlayer3D"))
 
-
 func _on_WalkingEchoRange_area_entered(area):
 	#if area.get_child(2):
 	#	if area.get_child(2).get_class() == "AudioStreamPlayer3D":
@@ -140,8 +134,10 @@ func _on_WalkingEchoRange_area_entered(area):
 			print(area)
 			InteractList.append(area)
 
-
 func _on_WalkingEchoRange_area_exited(area):
 	if area.is_in_group("harvestable"):
 		InteractList.erase(area)
 	pass # Replace with function body.
+
+func set_name_to_speech(arg_stream):
+	name_to_speech = arg_stream

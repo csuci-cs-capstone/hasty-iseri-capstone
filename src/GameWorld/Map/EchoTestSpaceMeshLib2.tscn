@@ -60,19 +60,15 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -14.9628, 3.14675, 11.8596 )
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 9.82693, 3.29205, 19.2442 )
 
 [node name="Boulder" parent="." instance=ExtResource( 2 )]
-type = ""
 
 [node name="Boulder2" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -7.29515, 0.591944, -9.63495 )
-type = ""
 
 [node name="Boulder3" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -14.6794, 0.591944, -9.66514 )
-type = ""
 
 [node name="Boulder4" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -10.6567, 0.591944, -9.7371 )
-type = ""
 
 [node name="Bush" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.4428, 1.31248, 12.0776 )
@@ -82,7 +78,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.71294, 1.31248, -20.6042 )
 
 [node name="Boulder5" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 8.85924, 0.425203, -27.8509 )
-type = ""
 
 [node name="Bush3" parent="." instance=ExtResource( 5 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -23.5448, 1.31248, -28.2929 )
@@ -101,7 +96,6 @@ transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -27.6264, 1.31248, 14.2903 )
 
 [node name="Boulder6" parent="." instance=ExtResource( 2 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -27.486, 0.591944, -3.85517 )
-type = ""
 
 [node name="Tree7" parent="." instance=ExtResource( 10 )]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -25.4703, 3.29205, -8.81599 )

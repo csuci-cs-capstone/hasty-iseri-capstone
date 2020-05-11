@@ -1,16 +1,17 @@
 extends Spatial
 
 var identity_sound
-export(String, "tree", "boulder", "bush") var type
+export(String, "tree", "boulder", "bush") var type: String = "tree"
 var resource
+
+var Marker = load("res://src/GameWorld/MenuInterfaces/MapMenu/Marker.tscn")
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	add_to_group("obstacles")
-	add_to_group("harvestable")
 
 func set_identity_sound(stream):
-	$AudioStreamPlayer3D.set_stream(stream)
+	identity_sound = stream
 	
 func get_identity_sound():
 	return identity_sound

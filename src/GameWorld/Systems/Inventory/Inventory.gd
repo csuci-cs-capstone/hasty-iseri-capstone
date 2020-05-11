@@ -88,6 +88,7 @@ func has_multiple_items():
 	return false
 
 func is_at_max_capacity():
+	print("len inventory items: " + str(len(inventory_items)))
 	if len(inventory_items) == max_capacity:
 		return true
 	return false

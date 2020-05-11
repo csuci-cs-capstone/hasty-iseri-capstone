@@ -13,7 +13,7 @@
 		"identity_sound": "bush.wav",
 		"resource": "sticks"
 	}
-	
+
 },
   "resources": {
       "null":{
@@ -76,9 +76,7 @@
           "description": "speech_apple_description.wav",
           "consume_sound": "apple-crunch-14.wav",
           "consume_value": 1,
-          "craft_mappings": [
-            ["red", "green"]
-          ]
+          "craft_mappings": []
       },
       "sticks": {
           "name": "speech_sticks.wav",
@@ -98,6 +96,20 @@
           "identity_sound": "axe-chop-into-wood-little-debris.wav",
           "consume_value": 0,
           "craft_mappings": [ ["sticks", "stones"] ]
+      }
+    },
+    "waypoints": {
+      "waypoint1": {
+        "name": "speech_waypoint1.wav"
+      },
+      "waypoint2": {
+        "name": "speech_waypoint2.wav"
+      },
+      "waypoint3": {
+        "name": "speech_waypoint3.wav"
+      },
+      "waypoint4": {
+        "name": "speech_waypoint4.wav"
       }
     }
 }
