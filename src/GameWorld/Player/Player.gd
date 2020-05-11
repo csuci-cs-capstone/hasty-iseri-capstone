@@ -7,11 +7,16 @@ const MAX_SPEED = 5
 const ACCEL= 2
 const DEACCEL= 4
 const MAX_SLOPE_ANGLE = 30
+var mouse_sensitivity = .3
 var EchoList = []
 var InteractList = []
 var footsteps_playing = false
 var previous_position
 var paused = false
+signal harvested(type)
+onready var head = $Head
+onready var camera = $Head/Camera
+var camera_x_rotation = 0
 signal obstacle_harvested(obstacle, resource)
 var name_to_speech = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_player.wav")
 
@@ -19,11 +24,20 @@ var name_to_speech = load("res://src/GameWorld/MenuInterfaces/MapMenu/speech_pla
 func _ready():
 	add_to_group("player")
 
+func _input(event):
+	if !paused:
+		if event is InputEventMouseMotion:
+			head.rotate_y(deg2rad(-event.relative.x * mouse_sensitivity))
+#			var x_delta = -event.relative.y * mouse_sensitivity
+##			if camera_x_rotation + x_delta > -90 and camera_x_rotation + x_delta < 90:
+##				camera.rotate_x(deg2rad(-x_delta))
+##				camera_x_rotation += x_delta
+	
 func _physics_process(delta):
 	if !paused:
 		var dir = Vector3() # Where does the player intend to walk to
-		var cam_xform = $target/camera.get_global_transform()
-
+		var cam_xform = $Head/Camera.get_global_transform()
+	
 		if Input.is_action_pressed("gameworld_move_forward"):
 			dir += -cam_xform.basis[2]
 		if Input.is_action_pressed("gameworld_move_backwards"):
@@ -37,6 +51,8 @@ func _physics_process(delta):
 		if Input.is_action_just_pressed("gameworld_interact"):
 			if InteractList.size() > 0:
 				interact()
+		if Input.is_action_just_pressed("compass"):
+			$Compass.play()
 		dir.y = 0
 		dir = dir.normalized()
 
