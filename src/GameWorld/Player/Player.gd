@@ -26,8 +26,12 @@ func _ready():
 
 func _input(event):
 	if !paused:
-		if event is InputEventMouseMotion:
+		if Input.get_connected_joypads():
+			if abs(Input.get_joy_axis(0, 2)) > .15:
+				head.rotate_y(deg2rad(-Input.get_joy_axis(0, 2)))
+		elif event is InputEventMouseMotion:
 			head.rotate_y(deg2rad(-event.relative.x * mouse_sensitivity))
+		
 #			var x_delta = -event.relative.y * mouse_sensitivity
 ##			if camera_x_rotation + x_delta > -90 and camera_x_rotation + x_delta < 90:
 ##				camera.rotate_x(deg2rad(-x_delta))
