@@ -17,6 +17,7 @@ extents = Vector2( 1, 720 )
 [sub_resource type="CircleShape2D" id=3]
 
 [node name="MapMenu" type="Control"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 script = ExtResource( 1 )
