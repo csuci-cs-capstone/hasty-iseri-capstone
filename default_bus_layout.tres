@@ -1,4 +1,4 @@
-[gd_resource type="AudioBusLayout" load_steps=5 format=2]
+[gd_resource type="AudioBusLayout" load_steps=7 format=2]
 
 [sub_resource type="AudioEffectPanner" id=1]
 resource_name = "Panner"
@@ -15,6 +15,16 @@ pan = 1.0
 [sub_resource type="AudioEffectDelay" id=4]
 resource_name = "Delay"
 dry = 0.0
+
+[sub_resource type="AudioEffectCompressor" id=5]
+resource_name = "Compressor"
+threshold = -7.0
+ratio = 2.0
+release_ms = 80.0
+
+[sub_resource type="AudioEffectHighPassFilter" id=6]
+resource_name = "HighPassFilter"
+cutoff_hz = 50.0
 
 [resource]
 bus/1/name = "L_UI_Whisper"
@@ -37,3 +47,13 @@ bus/2/effect/0/effect = SubResource( 3 )
 bus/2/effect/0/enabled = true
 bus/2/effect/1/effect = SubResource( 4 )
 bus/2/effect/1/enabled = false
+bus/3/name = "Reduce_Bass"
+bus/3/solo = false
+bus/3/mute = false
+bus/3/bypass_fx = false
+bus/3/volume_db = 0.0
+bus/3/send = "Master"
+bus/3/effect/0/effect = SubResource( 5 )
+bus/3/effect/0/enabled = false
+bus/3/effect/1/effect = SubResource( 6 )
+bus/3/effect/1/enabled = true

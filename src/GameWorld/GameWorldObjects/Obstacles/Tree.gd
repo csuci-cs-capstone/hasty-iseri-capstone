@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+extends "res://src/GameWorld/GameWorldObjects/Obstacles/GameWorldObstacle.gd"
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	type = "tree"
+=======
 extends Area
 var interactable = true
 
@@ -15,3 +22,4 @@ func _ready():
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
+>>>>>>> origin/master

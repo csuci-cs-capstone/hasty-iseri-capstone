@@ -122,6 +122,20 @@ func close():
 
 # TODO: initialize consumption mechanic
 func consume_selected_item():
+<<<<<<< HEAD
+	if not inventory.is_empty():
+		if inventory.get_item_at_index(current_index).get_consume_value() == 0:
+			$WhisperAudioPlayerQueue.add_primary_stream(audio_consume_failed_sound)
+			$WhisperAudioPlayerQueue.commit()
+		else:
+			#$WhisperAudioPlayerQueue.add_primary_stream(inventory.get_name_to_speech_at_index(current_index))
+			#$WhisperAudioPlayerQueue.commit()
+			$ConsumeSound.set_stream(inventory.get_consume_sound_at_index(current_index))
+			$ConsumeSound.play()
+			var consume_value = inventory.get_item_at_index(current_index).get_consume_value()
+			inventory.remove_item_at_index(current_index)
+			emit_signal("item_consumed", consume_value)
+=======
 	if inventory.get_item_at_index(current_index).get_consume_value() == 0:
 		$WhisperAudioPlayerQueue.add_primary_stream(audio_consume_failed_sound)
 		$WhisperAudioPlayerQueue.commit()
@@ -133,6 +147,7 @@ func consume_selected_item():
 		var consume_value = inventory.get_item_at_index(current_index).get_consume_value()
 		inventory.remove_item_at_index(current_index)
 		emit_signal("item_consumed", consume_value)
+>>>>>>> origin/master
 
 func current_item_selected(end_reached=false):
 	if not inventory.is_empty():
@@ -327,7 +342,11 @@ func toggle_current_item_craft_mark():
 		else:
 			$WhisperAudioPlayerQueue.add_primary_stream(audio_unmark_for_craft)
 			$WhisperAudioPlayerQueue.commit()
+<<<<<<< HEAD
+	print(str(marked_for_craft))
+=======
 
+>>>>>>> origin/master
 	$WhisperAudioPlayerQueue.add_primary_stream(inventory.get_name_to_speech_at_index(current_index))
 	$WhisperAudioPlayerQueue.commit()
 	

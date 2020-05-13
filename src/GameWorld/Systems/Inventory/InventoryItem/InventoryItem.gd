@@ -1,8 +1,12 @@
 extends Node
 class_name InventoryItem
 
+<<<<<<< HEAD
+var type = null
+=======
 var type = "empty"
 var has_consume = false
+>>>>>>> origin/master
 var consume_sound
 var consume_value
 var identity_sound
@@ -53,6 +57,10 @@ func set_identity_sound(arg_identity_sound):
 func set_name_to_speech(arg_name_to_speech):
 	name_to_speech = arg_name_to_speech
 	
+<<<<<<< HEAD
+func set_type(arg_type=null):
+=======
 func set_type(arg_type="empty"):
+>>>>>>> origin/master
 	self.type = arg_type
 
