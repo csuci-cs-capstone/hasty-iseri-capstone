@@ -23,6 +23,7 @@ func _ready():
 	load_inventory()
 	# TODO: load energy level from saved state or initialize at a default value
 	$EnergyLevel.set_level(DEFAULT_ENERGY_LEVEL)
+	$Map/Ambiance.play()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
@@ -169,6 +170,8 @@ func open_inventory_menu():
 
 func pause_game():
 	paused = true
+	if $Map/Ambiance.is_playing():
+		$Map/Ambiance.stop()
 	$Map/Player.paused = true
 	if $Map/Player/Footsteps.is_playing():
 		$Map/Player/Footsteps.stop()
@@ -179,3 +182,5 @@ func populate_tactile_map_with_marker_data():
 func unpause_game():
 	paused = false
 	$Map/Player.paused = false
+	if not $Map/Ambiance.is_playing():
+		$Map/Ambiance.play()
