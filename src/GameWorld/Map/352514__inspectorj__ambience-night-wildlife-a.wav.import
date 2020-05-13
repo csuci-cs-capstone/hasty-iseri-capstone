@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/352514__inspectorj__ambience-night-wildlife-a.wav-0f3a1477832d8381a5f1ef98b5ce0a8d.sample"
+
+[deps]
+
+source_file="res://src/GameWorld/Map/352514__inspectorj__ambience-night-wildlife-a.wav"
+dest_files=[ "res://.import/352514__inspectorj__ambience-night-wildlife-a.wav-0f3a1477832d8381a5f1ef98b5ce0a8d.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=true
+edit/normalize=false
+edit/loop=true
+compress/mode=0

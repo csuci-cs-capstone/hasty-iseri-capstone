@@ -13,7 +13,11 @@
 		"identity_sound": "bush.wav",
 		"resource": "sticks"
 	}
+<<<<<<< HEAD
+
+=======
 	
+>>>>>>> origin/master
 },
   "resources": {
       "null":{
@@ -76,9 +80,13 @@
           "description": "speech_apple_description.wav",
           "consume_sound": "apple-crunch-14.wav",
           "consume_value": 1,
+<<<<<<< HEAD
+          "craft_mappings": []
+=======
           "craft_mappings": [
             ["red", "green"]
           ]
+>>>>>>> origin/master
       },
       "sticks": {
           "name": "speech_sticks.wav",
@@ -99,5 +107,22 @@
           "consume_value": 0,
           "craft_mappings": [ ["sticks", "stones"] ]
       }
+<<<<<<< HEAD
+    },
+    "waypoints": {
+      "waypoint1": {
+        "name": "speech_waypoint1.wav"
+      },
+      "waypoint2": {
+        "name": "speech_waypoint2.wav"
+      },
+      "waypoint3": {
+        "name": "speech_waypoint3.wav"
+      },
+      "waypoint4": {
+        "name": "speech_waypoint4.wav"
+      }
+=======
+>>>>>>> origin/master
     }
 }
