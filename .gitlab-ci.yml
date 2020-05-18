@@ -27,8 +27,8 @@ linux:
     paths:
       - build/linux
   rules:
-      if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
-      when: always
+      - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+      - when: always
 
 windows:
   stage: export
@@ -39,8 +39,8 @@ windows:
     paths:
       - build/windows
   rules:
-      if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
-      when: always
+      - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+      - when: always
 
 .mac:
   stage: export
@@ -51,8 +51,8 @@ windows:
     paths:
       - build/mac
   rules:
-      if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
-      when: always
+      - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+      - when: always
 
 web:
   stage: export
@@ -63,8 +63,8 @@ web:
     paths:
       - build/web
   rules:
-      if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
-      when: always
+      - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+      - when: always
 
 # GitLab Pages Deploy
 pages:
@@ -81,8 +81,8 @@ pages:
     paths:
       - public
   rules:
-      if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
-      when: always
+      - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+      - when: always
 
 # Itch.io Deploy
 .itchio:linux:
@@ -92,8 +92,8 @@ pages:
   dependencies:
     - linux
   rules:
-      if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
-      when: always
+      - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+      - when: always
 
 .itchio:windows:
   stage: deploy
@@ -102,8 +102,8 @@ pages:
   dependencies:
     - windows
   rules:
-      if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
-      when: always
+      - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+      - when: always
 
 .itchio:macosx:
   stage: deploy
@@ -112,5 +112,5 @@ pages:
   dependencies:
     - mac
   rules:
-      if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
-      when: always
+      - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master"'
+      - when: always
