@@ -11,7 +11,7 @@ stages:
   - deploy
 
 variables:
-  EXPORT_NAME: game-off
+  EXPORT_NAME: hasty-iseri-capstone
 
 before_script:
   - mkdir -v -p build/linux
